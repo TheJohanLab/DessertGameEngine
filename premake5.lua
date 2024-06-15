@@ -26,9 +26,10 @@ startproject = "Sandbox"
 
 project "DessertGameEngine"
 	location "DessertGameEngine"
-	kind "SharedLib"
+	kind "StaticLib"
 	language "C++"
-	staticruntime "off"
+	cppdialect "C++17"
+	staticruntime "on"
 
 	targetdir "bin/%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}/DessertGameEngine"
 	objdir "bin-int/%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}/DessertGameEngine"
@@ -42,6 +43,11 @@ project "DessertGameEngine"
 		"DessertGameEngine/src/**.cpp",
 		"DessertGameEngine/vendor/glm/glm/**.hpp",
 		"DessertGameEngine/vendor/glm/glm/**.inl"
+	}
+
+	defines
+	{
+		"_CRT_SECURE_NO_WARNINGS"
 	}
 
 	includedirs
@@ -64,7 +70,6 @@ project "DessertGameEngine"
 	}
 
 	filter "system:windows"
-		cppdialect "C++17"
 		systemversion "latest"
 
 		defines
@@ -74,25 +79,21 @@ project "DessertGameEngine"
 			"GLFW_INCLUDE_NONE"
 		}
 
-		postbuildcommands
-		{
-			"copy /B /Y ..\\bin\\%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}\\DessertGameEngine\\DessertGameEngine.dll ..\\bin\\%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}\\Sandbox\\ > nul"
-		}
 
 	filter "configurations:Debug"
 		defines "DGE_DEBUG"
 		runtime "Debug"
-		symbols "On"
+		symbols "on"
 
 	filter "configurations:Release"
 		defines "DGE_RELEASE"
 		runtime "Release"
-		optimize "On"
+		optimize "on"
 
 	filter "configurations:Dist"
 		defines "DGE_DIST"
 		runtime "Release"
-		optimize "On"
+		optimize "on"
 
 
 
@@ -100,7 +101,8 @@ project "Sandbox"
 	location "Sandbox"
 	kind "ConsoleApp"
 	language "C++"
-	staticruntime "off"
+	cppdialect "C++17"
+	staticruntime "on"
 
 	targetdir ("bin/%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}/Sandbox")
 	objdir ("bin-int/%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}/Sandbox")
@@ -125,7 +127,6 @@ project "Sandbox"
 	}
 
 	filter "system:windows"
-		cppdialect "C++17"
 		systemversion "latest"
 
 		defines
@@ -136,14 +137,14 @@ project "Sandbox"
 	filter "configurations:Debug"
 		defines "DGE_DEBUG"
 		runtime "Debug"
-		symbols "On"
+		symbols "on"
 
 	filter "configurations:Release"
 		defines "DGE_RELEASE"
 		runtime "Release"
-		optimize "On"
+		optimize "on"
 
 	filter "configurations:Dist"
 		defines "DGE_DIST"
 		runtime "Release"
-		optimize "On"
+		optimize "on"

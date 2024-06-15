@@ -1,11 +1,16 @@
 #pragma once
 
 #ifdef DGE_PLATFORM_WINDOWS
+
+#if DGE_DYNAMIC_LINK
 	#ifdef DGE_BUILD_DLL
 		#define DESSERT_API __declspec(dllexport)
 	#else
 		#define DESSERT_API __declspec(dllimport)
 	#endif
+#else
+	#define DESSERT_API
+#endif
 
 #else 
 	#error Dessert only support Windows!
