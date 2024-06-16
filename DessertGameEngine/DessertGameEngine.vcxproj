@@ -143,6 +143,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
     <ClInclude Include="src\Dessert.h" />
     <ClInclude Include="src\Dessert\Application.h" />
     <ClInclude Include="src\Dessert\Core.h" />
@@ -158,6 +159,7 @@
     <ClInclude Include="src\Dessert\LayerStack.h" />
     <ClInclude Include="src\Dessert\Log.h" />
     <ClInclude Include="src\Dessert\MouseButtonsCodes.h" />
+    <ClInclude Include="src\Dessert\Renderer\GraphicsContext.h" />
     <ClInclude Include="src\Dessert\Window.h" />
     <ClInclude Include="src\Platform\Windows\WindowsInput.h" />
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
@@ -579,6 +581,7 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />
     <ClCompile Include="src\Dessert\Application.cpp" />
     <ClCompile Include="src\Dessert\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\Dessert\ImGui\ImGuiLayer.cpp" />
