@@ -10,11 +10,22 @@
 
 #include "Dessert/ImGui/ImGuiLayer.h"
 
+#include "Dessert/Renderer/Shader.h"
 
 namespace Dessert {
 
 	class DESSERT_API Application
 	{
+	private:
+		std::unique_ptr<Window> m_Window;
+		ImGuiLayer* m_ImGuiLayer;
+		bool m_Running = true;
+		LayerStack m_LayerStack;
+		static Application* s_Instance;
+
+		unsigned int m_VertexArray, m_VertexBuffer, m_IndexBuffer;
+		std::unique_ptr<Shader> m_Shader;
+
 	public: 
 		Application();
 		virtual ~Application();
@@ -30,17 +41,9 @@ namespace Dessert {
 	
 		inline static Application& Get() { return *s_Instance; }
 
-
-	private:
-		bool OnWindowClose(WindowCloseEvent& e);
-
-		std::unique_ptr<Window> m_Window;
-		ImGuiLayer* m_ImGuiLayer;
-		bool m_Running = true;
-		LayerStack m_LayerStack;
 	
 	private:
-		static Application* s_Instance;
+		bool OnWindowClose(WindowCloseEvent& e);
 	};
 
 	//To be defined in the client
