@@ -401,3 +401,8 @@ FodyWeavers.xsd
 bin/
 bin-int/
 #DessertGameEngine/vendor/
+
+DessertGameEngine\vendor\glm
+DessertGameEngine/vendor/glm
+
+DessertGameEngine/vendor/
