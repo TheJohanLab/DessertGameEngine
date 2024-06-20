@@ -2,7 +2,7 @@
 
 #include "Application.h"
 
-#include <glad/glad.h>
+#include "Renderer/Renderer.h"
 
 #include "Input.h"
 
@@ -26,7 +26,7 @@ namespace Dessert {
 
 		PushOverlay(m_ImGuiLayer);
 
-		m_VertexArray.reset(VertexArray::Create());
+		/*m_VertexArray.reset(VertexArray::Create());
 
 		float vertices[4 * 7] = {
 			-0.5f,	 0.0f,	0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
@@ -158,7 +158,7 @@ namespace Dessert {
 
 		)";
 
-		m_BlueShader.reset(new Shader(blueVertexSrc, blueFragmentSrc));
+		m_BlueShader.reset(new Shader(blueVertexSrc, blueFragmentSrc));*/
 
 	}
 
@@ -172,18 +172,22 @@ namespace Dessert {
 
 		while (m_Running) 
 		{
-			glClearColor(0.2f, 0.2f, 0.2f, 1);
-			glClear(GL_COLOR_BUFFER_BIT);
 
-			m_BlueShader->Bind();
-			m_SquareVertexArray->Bind();
-			glDrawElements(GL_TRIANGLES, m_SquareVertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
+			/*RenderCommand::SetClearColor({ 0.2f, 0.2f, 0.2f, 1 });
+			RenderCommand::Clear();
+
+			Renderer::BeginScene();
 			
+			m_BlueShader->Bind();
+			Renderer::Submit(m_SquareVertexArray);
+			 
 			m_Shader->Bind();
-			m_VertexArray->Bind();
+			Renderer::Submit(m_VertexArray);
+			
+			Renderer::EndScene();*/
+			//Renderer::Flush();
 
-			glDrawElements(GL_TRIANGLES, m_VertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
-
+			
 			for (Layer* layer : m_LayerStack)
 				layer->OnUpdate();
 			

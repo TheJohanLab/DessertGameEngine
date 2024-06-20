@@ -104,7 +104,7 @@ namespace Dessert {
 			for (auto& element: m_Elements)
 			{
 				element.offset = offset;
-				offset += element.size;
+				offset   += element.size;
 				m_Stride += element.size;
 			}
 		}
