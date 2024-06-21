@@ -14,6 +14,7 @@
 #include "Dessert/Renderer/Buffer.h"
 #include "Dessert/Renderer/VertexArray.h"
 
+#include "Dessert/Renderer/Camera.h"
 
 namespace Dessert {
 
@@ -32,8 +33,12 @@ namespace Dessert {
 		std::shared_ptr<Shader> m_BlueShader;
 		std::shared_ptr<VertexArray> m_SquareVertexArray;
 
+	protected:
+		Camera m_OrthoCamera;
+
 	public: 
 		Application();
+		Application(Camera& orthoCamera);
 		virtual ~Application();
 
 		void Run();
@@ -49,6 +54,7 @@ namespace Dessert {
 
 	
 	private:
+		void initApplication();
 		bool OnWindowClose(WindowCloseEvent& e);
 	};
 

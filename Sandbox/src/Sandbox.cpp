@@ -6,8 +6,8 @@
 class ExampleLayer : public Dessert::Layer
 {
 public:
-	ExampleLayer()
-		:Layer("Example")
+	ExampleLayer(Dessert::Camera orthoCamera)
+		:Layer("Example"), m_OrthoCamera(orthoCamera)
 	{
 
 		m_VertexArray.reset(Dessert::VertexArray::Create());
@@ -18,6 +18,12 @@ public:
 			 0.0f,	 0.5f,	0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
 			 0.0f,  -0.5f,  0.0f, 1.0f, 0.0f, 1.0f, 1.0f
 		};
+		/*float vertices[4 * 7] = {
+			 1.0f,	 1.0f,	0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
+			 300.0f, 1.0f,	0.0f, 0.0f, 0.0f, 1.0f, 1.0f,
+			 300.0f, 300.0f,	0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
+			 1.0f,  300.0f,  0.0f, 1.0f, 0.0f, 1.0f, 1.0f
+		};*/
 
 		std::shared_ptr<Dessert::VertexBuffer> vertexBuffer;
 		vertexBuffer.reset(Dessert::VertexBuffer::Create(vertices, sizeof(vertices)));
@@ -43,7 +49,7 @@ public:
 		m_SquareVertexArray.reset(Dessert::VertexArray::Create());
 
 		float squareVertices[4 * 3] = {
-			-0.5f,	-0.5f,	0.0f,
+			-0.5f,  -0.5f,	0.0f,
 			 0.5f,	-0.5f,	0.0f,
 			 0.5f,	 0.5f,	0.0f,
 			-0.5f,   0.5f,  0.0f
@@ -79,13 +85,13 @@ public:
 			
 			out vec3 v_Position;
 			out vec4 v_Color;
-
+			uniform mat4 u_MVPMatrix;
 
 			void main()
 			{
 				v_Position = a_Position;
 				v_Color = a_Color;
-				gl_Position = vec4(a_Position, 1.0);
+				gl_Position = u_MVPMatrix * vec4(a_Position, 1.0);
 			}
 
 		)";
@@ -117,12 +123,12 @@ public:
 			layout(location = 0) in vec3 a_Position;			
 			
 			out vec3 v_Position;
-
+			uniform mat4 u_MVPMatrix;
 
 			void main()
 			{
 				v_Position = a_Position;
-				gl_Position = vec4(a_Position, 1.0);
+				gl_Position = u_MVPMatrix * vec4(a_Position, 1.0);
 			}
 
 		)";
@@ -144,7 +150,6 @@ public:
 
 		m_BlueShader.reset(new Dessert::Shader(blueVertexSrc, blueFragmentSrc));
 
-
 	}
 
 	void OnUpdate() override
@@ -157,13 +162,16 @@ public:
 		Dessert::RenderCommand::SetClearColor({ 0.2f, 0.2f, 0.2f, 1 });
 		Dessert::RenderCommand::Clear();
 
-		Dessert::Renderer::BeginScene();
+		m_OrthoCamera.setTransformPosition(glm::vec3(0.5f, -0.25f, 0.0f));
+		m_OrthoCamera.setTransformRotation(glm::vec3(0.0f, 0.0f, 45.0f));
 
-		m_BlueShader->Bind();
-		Dessert::Renderer::Submit(m_SquareVertexArray);
+		Dessert::Renderer::BeginScene(m_OrthoCamera);
 
-		m_Shader->Bind();
-		Dessert::Renderer::Submit(m_VertexArray);
+		//m_BlueShader->Bind();
+		Dessert::Renderer::Submit(m_BlueShader, m_SquareVertexArray);
+
+		//m_Shader->Bind();
+		Dessert::Renderer::Submit(m_Shader, m_VertexArray);
 
 		Dessert::Renderer::EndScene();
 	}
@@ -191,6 +199,8 @@ public:
 
 		std::shared_ptr<Dessert::Shader> m_BlueShader;
 		std::shared_ptr<Dessert::VertexArray> m_SquareVertexArray;
+
+		Dessert::Camera m_OrthoCamera;
 };
 
 class Sandbox : public Dessert::Application
@@ -198,7 +208,7 @@ class Sandbox : public Dessert::Application
 public:
 	Sandbox()
 	{
-		PushLayer(new ExampleLayer());
+		PushLayer(new ExampleLayer(m_OrthoCamera));
 	}
 
 	~Sandbox()

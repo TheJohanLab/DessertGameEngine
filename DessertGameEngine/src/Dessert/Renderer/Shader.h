@@ -1,5 +1,6 @@
 #pragma once
 
+#include "glm/glm.hpp"
 #include <string>
 
 namespace Dessert {
@@ -12,6 +13,8 @@ namespace Dessert {
 
 		void Bind() const;
 		void Unbind() const;
+
+		void setUniformMat4f(const char* name, const glm::mat4& matrix) const;
 
 	private:
 		uint32_t m_RendererId;

@@ -15,17 +15,10 @@ namespace Dessert {
 
 
 	Application::Application()
+		:m_OrthoCamera(-1.6f, 1.6f, -0.9f, 0.9f)
 	{
-		DGE_CORE_ASSERT(!s_Instance, "Application already exists");
-		s_Instance = this;
-
-		m_Window = std::unique_ptr<Window>(Window::Create());
-		m_Window->SetEventCallback(BIND_EVENT_FUNC(Application::OnEvent));
-
-		m_ImGuiLayer = new ImGuiLayer();
-
-		PushOverlay(m_ImGuiLayer);
-
+		initApplication();
+		
 		/*m_VertexArray.reset(VertexArray::Create());
 
 		float vertices[4 * 7] = {
@@ -162,6 +155,12 @@ namespace Dessert {
 
 	}
 
+	Application::Application(Camera& orthoCamera)
+		:m_OrthoCamera(orthoCamera)
+	{
+		initApplication();
+	}
+
 	Application::~Application()
 	{
 
@@ -228,6 +227,19 @@ namespace Dessert {
 				break;
 						
 		}
+	}
+
+	void Application::initApplication()
+	{
+		DGE_CORE_ASSERT(!s_Instance, "Application already exists");
+		s_Instance = this;
+
+		m_Window = std::unique_ptr<Window>(Window::Create());
+		m_Window->SetEventCallback(BIND_EVENT_FUNC(Application::OnEvent));
+
+		m_ImGuiLayer = new ImGuiLayer();
+
+		PushOverlay(m_ImGuiLayer);
 	}
 
 	bool Application::OnWindowClose(WindowCloseEvent& e)

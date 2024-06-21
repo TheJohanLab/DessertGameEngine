@@ -2,6 +2,9 @@
 #include "Shader.h"
 
 #include <glad/glad.h>
+#include "glm/glm.hpp"
+
+#include <glm/gtc/type_ptr.hpp>
 
 namespace Dessert {
 
@@ -126,5 +129,9 @@ namespace Dessert {
 	void Shader::Unbind() const
 	{
 		glUseProgram(0);
+	}
+	void Shader::setUniformMat4f(const char* name, const glm::mat4& matrix) const
+	{
+		glUniformMatrix4fv(glGetUniformLocation(m_RendererId, name), 1, GL_FALSE, glm::value_ptr(matrix));
 	}
 }
