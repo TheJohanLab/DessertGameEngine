@@ -2,7 +2,7 @@
 
 #include "Dessert/Core.h"
 #include "Dessert/Events/Event.h"
-
+#include "Dessert/Core/Timestep.h"
 
 namespace Dessert {
 
@@ -14,7 +14,7 @@ namespace Dessert {
 
 		virtual void OnAttach() {}
 		virtual void OnDetach() {}
-		virtual void OnUpdate() {}
+		virtual void OnUpdate(Timestep delta) {}
 		virtual void OnImGuiRender() {}
 		virtual void OnEvent(Event& event) {}
 

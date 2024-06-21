@@ -143,6 +143,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Dessert\Core\Timestep.h" />
     <ClInclude Include="src\Dessert\Renderer\RenderCommand.h" />
     <ClInclude Include="src\Dessert\Renderer\RendererAPI.h" />
     <ClInclude Include="src\Dessert\Renderer\Camera.h" />

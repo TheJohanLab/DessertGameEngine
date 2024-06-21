@@ -33,6 +33,9 @@ namespace Dessert {
 		void setTransformRotation(const glm::vec3& rotation);
 		void setTransform(const glm::vec3& position, const glm::vec3& rotation);
 
+		const glm::vec3 getTransformPosition() const { return m_Transform.Position; }
+		const glm::vec3 getTransformRotation() const { return m_Transform.Rotation; }
+
 		inline const glm::mat4& GetProjectionMatrix() const { return m_ProjectionMatrix; }
 		inline const glm::mat4& GetViewMatrix() const { return m_ViewMatrix; }
 		inline const glm::mat4& GetVPMatrix() const { return m_VPMatrix; }

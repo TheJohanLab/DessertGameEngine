@@ -6,8 +6,11 @@
 class ExampleLayer : public Dessert::Layer
 {
 public:
-	ExampleLayer(Dessert::Camera orthoCamera)
-		:Layer("Example"), m_OrthoCamera(orthoCamera)
+	ExampleLayer()
+		:Layer("Example"), 
+		m_Camera(-1.6f, 1.6f, -0.9f, 0.9f),
+		m_CameraPosition(0.0f, 0.0f, 0.0f),
+		m_CameraRotation(0.0f, 0.0f, 0.0f)
 	{
 
 		m_VertexArray.reset(Dessert::VertexArray::Create());
@@ -18,12 +21,7 @@ public:
 			 0.0f,	 0.5f,	0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
 			 0.0f,  -0.5f,  0.0f, 1.0f, 0.0f, 1.0f, 1.0f
 		};
-		/*float vertices[4 * 7] = {
-			 1.0f,	 1.0f,	0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
-			 300.0f, 1.0f,	0.0f, 0.0f, 0.0f, 1.0f, 1.0f,
-			 300.0f, 300.0f,	0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
-			 1.0f,  300.0f,  0.0f, 1.0f, 0.0f, 1.0f, 1.0f
-		};*/
+
 
 		std::shared_ptr<Dessert::VertexBuffer> vertexBuffer;
 		vertexBuffer.reset(Dessert::VertexBuffer::Create(vertices, sizeof(vertices)));
@@ -152,25 +150,46 @@ public:
 
 	}
 
-	void OnUpdate() override
+	void OnUpdate(Dessert::Timestep delta) override
 	{
-		//DGE_INFO("ExampleLayer::Update");
+		//DGE_TRACE("Delta time: {0} ({1}ms)", delta.GetSeconds(), delta.GetMilliseconds());
 
-		if (Dessert::Input::isKeyPressed(DGE_KEY_TAB))
-			DGE_TRACE("TAB key is pressed");
+		if (Dessert::Input::isKeyPressed(DGE_KEY_LEFT))
+		{
+			m_CameraPosition.x -= m_CameraMoveSpeed * delta;
+		}
+		else if (Dessert::Input::isKeyPressed(DGE_KEY_RIGHT))
+		{
+			m_CameraPosition.x += m_CameraMoveSpeed * delta;
+		}
+
+		if (Dessert::Input::isKeyPressed(DGE_KEY_UP))
+		{
+			m_CameraPosition.y += m_CameraMoveSpeed * delta;
+		}
+		else if (Dessert::Input::isKeyPressed(DGE_KEY_DOWN))
+		{
+			m_CameraPosition.y -= m_CameraMoveSpeed * delta;
+		}
+
+		if (Dessert::Input::isKeyPressed(DGE_KEY_A))
+		{
+			m_CameraRotation.z += m_CameraRotationSpeed * delta;
+		}
+		if (Dessert::Input::isKeyPressed(DGE_KEY_D))
+		{
+			m_CameraRotation.z -= m_CameraRotationSpeed * delta;
+		}
 
 		Dessert::RenderCommand::SetClearColor({ 0.2f, 0.2f, 0.2f, 1 });
 		Dessert::RenderCommand::Clear();
 
-		m_OrthoCamera.setTransformPosition(glm::vec3(0.5f, -0.25f, 0.0f));
-		m_OrthoCamera.setTransformRotation(glm::vec3(0.0f, 0.0f, 45.0f));
+		m_Camera.setTransformPosition(m_CameraPosition);
+		m_Camera.setTransformRotation(m_CameraRotation);
 
-		Dessert::Renderer::BeginScene(m_OrthoCamera);
+		Dessert::Renderer::BeginScene(m_Camera);
 
-		//m_BlueShader->Bind();
 		Dessert::Renderer::Submit(m_BlueShader, m_SquareVertexArray);
-
-		//m_Shader->Bind();
 		Dessert::Renderer::Submit(m_Shader, m_VertexArray);
 
 		Dessert::Renderer::EndScene();
@@ -178,19 +197,14 @@ public:
 
 	void OnEvent(Dessert::Event& event) override
 	{
-		if (event.GetEventType() == Dessert::EventType::KeyPressed)
-		{
-			Dessert::KeyPressedEvent& e = (Dessert::KeyPressedEvent&)event;
-			DGE_TRACE("{0}", (char)e.getKeyCode());
-		}
+		//Dessert::EventDispatcher dispatcher(event);
+		//dispatcher.Dispatch<Dessert::KeyPressedEvent>(BIND_EVENT_FUNC(ExampleLayer::OnKeyPressed));
+
 	}
+
 
 	virtual void OnImGuiRender() override
 	{
-		ImGui::Begin("Test");
-		ImGui::Text("Hello world");
-		ImGui::ColorEdit4("", new float[4]);
-		ImGui::End();
 	}
 
 	private:
@@ -200,7 +214,13 @@ public:
 		std::shared_ptr<Dessert::Shader> m_BlueShader;
 		std::shared_ptr<Dessert::VertexArray> m_SquareVertexArray;
 
-		Dessert::Camera m_OrthoCamera;
+		Dessert::Camera m_Camera;
+
+		glm::vec3 m_CameraPosition;
+		glm::vec3 m_CameraRotation;
+
+		float m_CameraMoveSpeed = 1.0f;
+		float m_CameraRotationSpeed = 50.0f;
 };
 
 class Sandbox : public Dessert::Application
@@ -208,7 +228,7 @@ class Sandbox : public Dessert::Application
 public:
 	Sandbox()
 	{
-		PushLayer(new ExampleLayer(m_OrthoCamera));
+		PushLayer(new ExampleLayer());
 	}
 
 	~Sandbox()

@@ -5,16 +5,12 @@
 #include "Window.h"
 #include "Dessert/LayerStack.h"
 #include "Dessert/Events/Event.h"
-
 #include "Dessert/Events/ApplicationEvent.h"
+
+#include "Dessert/Core/Timestep.h"
 
 #include "Dessert/ImGui/ImGuiLayer.h"
 
-#include "Dessert/Renderer/Shader.h"
-#include "Dessert/Renderer/Buffer.h"
-#include "Dessert/Renderer/VertexArray.h"
-
-#include "Dessert/Renderer/Camera.h"
 
 namespace Dessert {
 
@@ -25,20 +21,14 @@ namespace Dessert {
 		ImGuiLayer* m_ImGuiLayer;
 		bool m_Running = true;
 		LayerStack m_LayerStack;
+		float m_LastFrameTime = 0.0f;
+
+	private:
 		static Application* s_Instance;
 
-		std::shared_ptr<Shader> m_Shader;
-		std::shared_ptr<VertexArray> m_VertexArray;
-
-		std::shared_ptr<Shader> m_BlueShader;
-		std::shared_ptr<VertexArray> m_SquareVertexArray;
-
-	protected:
-		Camera m_OrthoCamera;
 
 	public: 
 		Application();
-		Application(Camera& orthoCamera);
 		virtual ~Application();
 
 		void Run();
