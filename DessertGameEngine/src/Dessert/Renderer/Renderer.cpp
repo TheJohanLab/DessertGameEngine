@@ -18,10 +18,14 @@ namespace Dessert {
 	{
 	}
 
-	void Renderer::Submit(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VertexArray>& vertexArray)
+	void Renderer::Submit(
+		const std::shared_ptr<Shader>& shader, 
+		const std::shared_ptr<VertexArray>& vertexArray,
+		const glm::mat4& transformMatrix)
 	{
 		shader->Bind();
 		shader->setUniformMat4f("u_MVPMatrix", m_SceneData->m_VPMatrix);
+		shader->setUniformMat4f("u_ModelMatrix", transformMatrix);
 
 		vertexArray->Bind();
 		RenderCommand::DrawIndexed(vertexArray);

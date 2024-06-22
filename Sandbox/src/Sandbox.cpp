@@ -84,12 +84,13 @@ public:
 			out vec3 v_Position;
 			out vec4 v_Color;
 			uniform mat4 u_MVPMatrix;
+			uniform mat4 u_ModelMatrix;
 
 			void main()
 			{
 				v_Position = a_Position;
 				v_Color = a_Color;
-				gl_Position = u_MVPMatrix * vec4(a_Position, 1.0);
+				gl_Position = u_MVPMatrix * u_ModelMatrix * vec4(a_Position, 1.0);
 			}
 
 		)";
@@ -122,11 +123,12 @@ public:
 			
 			out vec3 v_Position;
 			uniform mat4 u_MVPMatrix;
+			uniform mat4 u_ModelMatrix;
 
 			void main()
 			{
 				v_Position = a_Position;
-				gl_Position = u_MVPMatrix * vec4(a_Position, 1.0);
+				gl_Position = u_MVPMatrix * u_ModelMatrix * vec4(a_Position, 1.0);
 			}
 
 		)";
@@ -153,6 +155,8 @@ public:
 	void OnUpdate(Dessert::Timestep delta) override
 	{
 		//DGE_TRACE("Delta time: {0} ({1}ms)", delta.GetSeconds(), delta.GetMilliseconds());
+
+		// --------- Camera ------------
 
 		if (Dessert::Input::isKeyPressed(DGE_KEY_LEFT))
 		{
@@ -181,6 +185,9 @@ public:
 			m_CameraRotation.z -= m_CameraRotationSpeed * delta;
 		}
 
+
+
+
 		Dessert::RenderCommand::SetClearColor({ 0.2f, 0.2f, 0.2f, 1 });
 		Dessert::RenderCommand::Clear();
 
@@ -188,8 +195,18 @@ public:
 		m_Camera.setTransformRotation(m_CameraRotation);
 
 		Dessert::Renderer::BeginScene(m_Camera);
+		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
-		Dessert::Renderer::Submit(m_BlueShader, m_SquareVertexArray);
+		for (int y = 0; y < 10; y++)
+		{
+			for (int x = 0; x < 10; x++)
+			{
+				glm::vec3 position(x * 0.11f, y * 0.11f, 0.0f);
+				glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * scale;
+				Dessert::Renderer::Submit(m_BlueShader, m_SquareVertexArray, transform);	
+			}
+		}
+
 		Dessert::Renderer::Submit(m_Shader, m_VertexArray);
 
 		Dessert::Renderer::EndScene();
@@ -221,6 +238,7 @@ public:
 
 		float m_CameraMoveSpeed = 1.0f;
 		float m_CameraRotationSpeed = 50.0f;
+
 };
 
 class Sandbox : public Dessert::Application
