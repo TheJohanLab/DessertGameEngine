@@ -4,6 +4,8 @@
 #include "Camera.h"
 #include "Shader.h"
 
+#include "Platform/OpenGL/OpenGLShader.h"
+
 namespace Dessert{
 
 	class Renderer

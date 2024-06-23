@@ -1,7 +1,9 @@
 #include <Dessert.h>
+#include "Platform/OpenGL/OpenGLShader.h"
 
 #include "imgui/imgui.h"
 
+#include <glm/gtc/type_ptr.hpp>
 
 class ExampleLayer : public Dessert::Layer
 {
@@ -10,7 +12,8 @@ public:
 		:Layer("Example"), 
 		m_Camera(-1.6f, 1.6f, -0.9f, 0.9f),
 		m_CameraPosition(0.0f, 0.0f, 0.0f),
-		m_CameraRotation(0.0f, 0.0f, 0.0f)
+		m_CameraRotation(0.0f, 0.0f, 0.0f),
+		m_CameraScale(1.0f, 1.0f, 1.0f)
 	{
 
 		m_VertexArray.reset(Dessert::VertexArray::Create());
@@ -112,10 +115,10 @@ public:
 
 		)";
 
-		m_Shader.reset(new Dessert::Shader(vertexSrc, fragmentSrc));
+		m_Shader.reset(Dessert::Shader::Create(vertexSrc, fragmentSrc));
 
 		//Shaders
-		std::string blueVertexSrc = R"(
+		std::string flatColorShaderVertexSrc = R"(
 
 			#version 330 core
 
@@ -133,7 +136,7 @@ public:
 
 		)";
 
-		std::string blueFragmentSrc = R"(
+		std::string flatColorShaderFragmentSrc = R"(
 
 			#version 330 core
 
@@ -141,15 +144,21 @@ public:
 			
 			in vec3 v_Position;
 
+			uniform vec3 u_Color;
+
 			void main()
 			{
-				color = vec4(0.2, 0.3, 0.8, 1.0);
+				color = vec4(u_Color, 1.0);
 			}
 
 		)";
 
-		m_BlueShader.reset(new Dessert::Shader(blueVertexSrc, blueFragmentSrc));
+		m_flatColorShader.reset(Dessert::Shader::Create(flatColorShaderVertexSrc, flatColorShaderFragmentSrc));
+		
+		/*Dessert::Material* material = new Dessert::Material(m_flatColorShader);
+		Dessert::MaterialInstanceRef* materialInstance = new Dessert::MaterialInstance(material);*/
 
+		//materialInstance->Set("u_Color", redColor);
 	}
 
 	void OnUpdate(Dessert::Timestep delta) override
@@ -165,6 +174,17 @@ public:
 		else if (Dessert::Input::isKeyPressed(DGE_KEY_RIGHT))
 		{
 			m_CameraPosition.x += m_CameraMoveSpeed * delta;
+		}
+
+		if (Dessert::Input::isKeyPressed(DGE_KEY_P))
+		{
+			m_CameraScale.x -= 0.11 * delta;
+			m_CameraScale.y -= 0.11 * delta;
+		}
+		else if (Dessert::Input::isKeyPressed(DGE_KEY_Z))
+		{
+			m_CameraScale.x += 0.11 * delta;
+			m_CameraScale.y += 0.11 * delta;
 		}
 
 		if (Dessert::Input::isKeyPressed(DGE_KEY_UP))
@@ -188,14 +208,19 @@ public:
 
 
 
-		Dessert::RenderCommand::SetClearColor({ 0.2f, 0.2f, 0.2f, 1 });
+		Dessert::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 		Dessert::RenderCommand::Clear();
 
 		m_Camera.setTransformPosition(m_CameraPosition);
 		m_Camera.setTransformRotation(m_CameraRotation);
+		m_Camera.setTransformScale(m_CameraScale);
 
 		Dessert::Renderer::BeginScene(m_Camera);
 		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
+
+		std::dynamic_pointer_cast<Dessert::OpenGLShader>(m_flatColorShader)->Bind();
+		std::dynamic_pointer_cast<Dessert::OpenGLShader>(m_flatColorShader)->setUniformFloat3("u_Color", m_SquareColor);
+
 
 		for (int y = 0; y < 10; y++)
 		{
@@ -203,7 +228,9 @@ public:
 			{
 				glm::vec3 position(x * 0.11f, y * 0.11f, 0.0f);
 				glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * scale;
-				Dessert::Renderer::Submit(m_BlueShader, m_SquareVertexArray, transform);	
+
+				Dessert::Renderer::Submit(m_flatColorShader, m_SquareVertexArray, transform);
+				//Dessert::Renderer::Submit(materialInstance, m_SquareVertexArray, transform);
 			}
 		}
 
@@ -222,22 +249,31 @@ public:
 
 	virtual void OnImGuiRender() override
 	{
+		ImGui::Begin("Settings");
+
+		ImGui::ColorEdit3("Square Color", glm::value_ptr(m_SquareColor));
+
+		ImGui::End();
 	}
 
 	private:
 		std::shared_ptr<Dessert::Shader> m_Shader;
 		std::shared_ptr<Dessert::VertexArray> m_VertexArray;
 
-		std::shared_ptr<Dessert::Shader> m_BlueShader;
+		std::shared_ptr<Dessert::Shader> m_flatColorShader;
 		std::shared_ptr<Dessert::VertexArray> m_SquareVertexArray;
 
 		Dessert::Camera m_Camera;
 
 		glm::vec3 m_CameraPosition;
 		glm::vec3 m_CameraRotation;
+		glm::vec3 m_CameraScale;
+
 
 		float m_CameraMoveSpeed = 1.0f;
 		float m_CameraRotationSpeed = 50.0f;
+
+		glm::vec3 m_SquareColor = { 0.8f, 0.2f, 0.3f };
 
 };
 

@@ -24,8 +24,8 @@ namespace Dessert {
 		const glm::mat4& transformMatrix)
 	{
 		shader->Bind();
-		shader->setUniformMat4f("u_MVPMatrix", m_SceneData->m_VPMatrix);
-		shader->setUniformMat4f("u_ModelMatrix", transformMatrix);
+		std::dynamic_pointer_cast<OpenGLShader>(shader)->setUniformMat4("u_MVPMatrix", m_SceneData->m_VPMatrix);
+		std::dynamic_pointer_cast<OpenGLShader>(shader)->setUniformMat4("u_ModelMatrix", transformMatrix);
 
 		vertexArray->Bind();
 		RenderCommand::DrawIndexed(vertexArray);
