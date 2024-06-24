@@ -20,6 +20,7 @@
 
 #include "Dessert/Renderer/Buffer.h"
 #include "Dessert/Renderer/Shader.h"
+#include "Dessert/Renderer/Texture.h"
 #include "Dessert/Renderer/VertexArray.h"
 
 #include "Dessert/Renderer/Camera.h"

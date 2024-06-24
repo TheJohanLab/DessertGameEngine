@@ -16,6 +16,7 @@ IncludeDir["GLFW"] = "DessertGameEngine/vendor/GLFW/include"
 IncludeDir["Glad"] = "DessertGameEngine/vendor/Glad/include"
 IncludeDir["ImGui"] = "DessertGameEngine/vendor/imgui"
 IncludeDir["glm"] = "DessertGameEngine/vendor/glm"
+IncludeDir["stb_image"] = "DessertGameEngine/vendor/stb_image"
 
 include "DessertGameEngine/vendor/GLFW"
 include "DessertGameEngine/vendor/Glad"
@@ -39,10 +40,12 @@ project "DessertGameEngine"
 
 	files
 	{
-		"DessertGameEngine/src/**.h",
-		"DessertGameEngine/src/**.cpp",
-		"DessertGameEngine/vendor/glm/glm/**.hpp",
-		"DessertGameEngine/vendor/glm/glm/**.inl"
+		"%{prj.name}/src/**.h",
+		"%{prj.name}/src/**.cpp",
+		"%{prj.name}/vendor/stb_image/**.h",
+		"%{prj.name}/vendor/stb_image/**.cpp",
+		"%{prj.name}/vendor/glm/glm/**.hpp",
+		"%{prj.name}/vendor/glm/glm/**.inl"
 	}
 
 	defines
@@ -57,7 +60,8 @@ project "DessertGameEngine"
 		"$(SolutionDir)%{IncludeDir.GLFW}",
 		"$(SolutionDir)%{IncludeDir.Glad}",
 		"$(SolutionDir)%{IncludeDir.ImGui}",
-		"$(SolutionDir)%{IncludeDir.glm}"
+		"$(SolutionDir)%{IncludeDir.glm}",
+		"$(SolutionDir)%{IncludeDir.stb_image}",
 
 	}
 

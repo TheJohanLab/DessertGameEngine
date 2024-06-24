@@ -26,7 +26,7 @@ public:
 		};
 
 
-		std::shared_ptr<Dessert::VertexBuffer> vertexBuffer;
+		Dessert::Ref<Dessert::VertexBuffer> vertexBuffer;
 		vertexBuffer.reset(Dessert::VertexBuffer::Create(vertices, sizeof(vertices)));
 
 
@@ -43,26 +43,28 @@ public:
 			0, 1, 3
 		};
 
-		std::shared_ptr<Dessert::IndexBuffer> indexBuffer;
+		Dessert::Ref<Dessert::IndexBuffer> indexBuffer;
 		indexBuffer.reset(Dessert::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
 		m_VertexArray->SetIndexBuffer(indexBuffer);
 
 		m_SquareVertexArray.reset(Dessert::VertexArray::Create());
 
-		float squareVertices[4 * 3] = {
-			-0.5f,  -0.5f,	0.0f,
-			 0.5f,	-0.5f,	0.0f,
-			 0.5f,	 0.5f,	0.0f,
-			-0.5f,   0.5f,  0.0f
+		float squareVertices[4 * 5] = {
+			-0.5f,  -0.5f,	0.0f, 0.0f, 0.0f,
+			 0.5f,	-0.5f,	0.0f, 1.0f, 0.0f,
+			 0.5f,	 0.5f,	0.0f, 1.0f, 1.0f,
+			-0.5f,   0.5f,  0.0f, 0.0f, 1.0f
 		};
 
 
-		std::shared_ptr<Dessert::VertexBuffer> squareVertexBuffer;
+		Dessert::Ref<Dessert::VertexBuffer> squareVertexBuffer;
 		squareVertexBuffer.reset(Dessert::VertexBuffer::Create(squareVertices, sizeof(squareVertices)));
 
 		squareVertexBuffer->SetLayout({
-			{Dessert::ShaderDataType::Float3, "a_Position"}
-			});
+			{Dessert::ShaderDataType::Float3, "a_Position"},
+			{Dessert::ShaderDataType::Float2, "a_TextureCoord"}
+		});
+
 
 		m_SquareVertexArray->AddVertexBuffer(squareVertexBuffer);
 
@@ -72,7 +74,7 @@ public:
 			2, 3, 0
 		};
 
-		std::shared_ptr<Dessert::IndexBuffer> squareIndexBuffer;
+		Dessert::Ref<Dessert::IndexBuffer> squareIndexBuffer;
 		squareIndexBuffer.reset(Dessert::IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
 		m_SquareVertexArray->SetIndexBuffer(squareIndexBuffer);
 
@@ -154,7 +156,50 @@ public:
 		)";
 
 		m_flatColorShader.reset(Dessert::Shader::Create(flatColorShaderVertexSrc, flatColorShaderFragmentSrc));
+
+
+		std::string textureShaderVertexSrc = R"(
+
+			#version 330 core
+
+			layout(location = 0) in vec3 a_Position;			
+			layout(location = 1) in vec2 a_TextureCoord;			
+			
+			out vec2 v_TextCoord;
+
+			uniform mat4 u_MVPMatrix;
+			uniform mat4 u_ModelMatrix;
+
+			void main()
+			{
+				v_TextCoord = a_TextureCoord;
+				gl_Position = u_MVPMatrix * u_ModelMatrix * vec4(a_Position, 1.0);
+			}
+
+		)";
+
+		std::string textureShaderFragmentSrc = R"(
+
+			#version 330 core
+
+			layout(location = 0) out vec4 color;			
+			
+			in vec2 v_TextCoord;
+			uniform sampler2D u_Texture;
+			
+			void main()
+			{
+				color = texture(u_Texture, v_TextCoord);
+			}
+
+		)";
+
+		m_TextureShader.reset(Dessert::Shader::Create(textureShaderVertexSrc, textureShaderFragmentSrc));
 		
+		m_Texture = Dessert::Texture2D::Create("assets/textures/CheckerBoard.png");
+
+		std::dynamic_pointer_cast<Dessert::OpenGLShader>(m_TextureShader)->Bind();
+		std::dynamic_pointer_cast<Dessert::OpenGLShader>(m_TextureShader)->setUniformInt("u_Texture", 0); // 0 is the texture slot
 		/*Dessert::Material* material = new Dessert::Material(m_flatColorShader);
 		Dessert::MaterialInstanceRef* materialInstance = new Dessert::MaterialInstance(material);*/
 
@@ -234,7 +279,9 @@ public:
 			}
 		}
 
-		Dessert::Renderer::Submit(m_Shader, m_VertexArray);
+		m_Texture->Bind();
+		Dessert::Renderer::Submit(m_TextureShader, m_SquareVertexArray, glm::scale(glm::mat4(1.0f), glm::vec3(1.0f)));
+		//Dessert::Renderer::Submit(m_Shader, m_VertexArray);
 
 		Dessert::Renderer::EndScene();
 	}
@@ -257,11 +304,14 @@ public:
 	}
 
 	private:
-		std::shared_ptr<Dessert::Shader> m_Shader;
-		std::shared_ptr<Dessert::VertexArray> m_VertexArray;
+		Dessert::Ref<Dessert::Shader> m_Shader;
+		Dessert::Ref<Dessert::VertexArray> m_VertexArray;
 
-		std::shared_ptr<Dessert::Shader> m_flatColorShader;
-		std::shared_ptr<Dessert::VertexArray> m_SquareVertexArray;
+		Dessert::Ref<Dessert::Shader> m_flatColorShader;
+		Dessert::Ref<Dessert::Shader> m_TextureShader;
+		Dessert::Ref<Dessert::VertexArray> m_SquareVertexArray;
+
+		Dessert::Ref<Dessert::Texture2D> m_Texture;
 
 		Dessert::Camera m_Camera;
 

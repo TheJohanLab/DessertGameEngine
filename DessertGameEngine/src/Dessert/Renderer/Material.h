@@ -8,7 +8,7 @@ namespace Dessert {
 	class Material
 	{
 	private:
-		std::shared_ptr<Shader> m_Shader;
+		Ref<Shader> m_Shader;
 
 	public:
 		Material(Shader* shader);
