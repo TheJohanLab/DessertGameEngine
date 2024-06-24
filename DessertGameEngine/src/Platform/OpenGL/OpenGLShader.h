@@ -4,12 +4,18 @@
 
 #include "glm/glm.hpp"
 
+// TODO remove
+typedef unsigned int GLenum;
 
 namespace Dessert {
 
 	class OpenGLShader: public Shader
 	{
+	private:
+		uint32_t m_RendererId;
+
 	public:
+		OpenGLShader(const std::string& filepath);
 		OpenGLShader(const std::string& vertexSrc, const std::string& fragmentSrc);
 		~OpenGLShader();
 
@@ -26,6 +32,9 @@ namespace Dessert {
 		void setUniformFloat4(const char* name, const glm::vec4& values) const;
 
 	private:
-		uint32_t m_RendererId;
+		std::string ReadFile(const std::string& filepath);
+		std::unordered_map<GLenum, std::string> PreProcess(const std::string& source);
+		void Compile(const std::unordered_map<GLenum, std::string>& shaderSources);
+	
 	};
 }
