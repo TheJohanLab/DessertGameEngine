@@ -19,6 +19,8 @@ namespace Dessert{
 		static SceneData* m_SceneData;
 
 	public:
+		static void Init();
+
 		static void BeginScene(const Camera& camera);
 		static void EndScene();
 

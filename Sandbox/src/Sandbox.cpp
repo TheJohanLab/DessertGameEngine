@@ -197,6 +197,7 @@ public:
 		m_TextureShader.reset(Dessert::Shader::Create(textureShaderVertexSrc, textureShaderFragmentSrc));
 		
 		m_Texture = Dessert::Texture2D::Create("assets/textures/CheckerBoard.png");
+		m_ButtonTexture = Dessert::Texture2D::Create("assets/textures/pushBtn.png");
 
 		std::dynamic_pointer_cast<Dessert::OpenGLShader>(m_TextureShader)->Bind();
 		std::dynamic_pointer_cast<Dessert::OpenGLShader>(m_TextureShader)->setUniformInt("u_Texture", 0); // 0 is the texture slot
@@ -281,6 +282,9 @@ public:
 
 		m_Texture->Bind();
 		Dessert::Renderer::Submit(m_TextureShader, m_SquareVertexArray, glm::scale(glm::mat4(1.0f), glm::vec3(1.0f)));
+		m_ButtonTexture->Bind();
+		Dessert::Renderer::Submit(m_TextureShader, m_SquareVertexArray, 
+			 glm::scale(glm::mat4(1.0f), glm::vec3(1.0f)));
 		//Dessert::Renderer::Submit(m_Shader, m_VertexArray);
 
 		Dessert::Renderer::EndScene();
@@ -312,6 +316,7 @@ public:
 		Dessert::Ref<Dessert::VertexArray> m_SquareVertexArray;
 
 		Dessert::Ref<Dessert::Texture2D> m_Texture;
+		Dessert::Ref<Dessert::Texture2D> m_ButtonTexture;
 
 		Dessert::Camera m_Camera;
 
