@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Dessert/Window.h"
+#include "Dessert/Core/Window.h"
 #include "Dessert/Renderer/GraphicsContext.h"
 
-#include "Dessert/Core.h"
+#include "Dessert/Core/Core.h"
 #include <GLFW/glfw3.h>
 
 namespace Dessert {

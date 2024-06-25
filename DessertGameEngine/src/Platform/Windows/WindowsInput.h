@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Dessert/Input.h"
+#include "Dessert/Core/Input.h"
 
 namespace Dessert {
 

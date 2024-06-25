@@ -144,33 +144,33 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\Dessert.h" />
-    <ClInclude Include="src\Dessert\Application.h" />
-    <ClInclude Include="src\Dessert\Core.h" />
+    <ClInclude Include="src\Dessert\Core\Application.h" />
+    <ClInclude Include="src\Dessert\Core\Core.h" />
+    <ClInclude Include="src\Dessert\Core\EntryPoint.h" />
+    <ClInclude Include="src\Dessert\Core\Input.h" />
+    <ClInclude Include="src\Dessert\Core\KeyCodes.h" />
+    <ClInclude Include="src\Dessert\Core\Layer.h" />
+    <ClInclude Include="src\Dessert\Core\LayerStack.h" />
+    <ClInclude Include="src\Dessert\Core\Log.h" />
+    <ClInclude Include="src\Dessert\Core\MouseButtonsCodes.h" />
     <ClInclude Include="src\Dessert\Core\Timestep.h" />
-    <ClInclude Include="src\Dessert\EntryPoint.h" />
+    <ClInclude Include="src\Dessert\Core\Window.h" />
     <ClInclude Include="src\Dessert\Events\ApplicationEvent.h" />
     <ClInclude Include="src\Dessert\Events\Event.h" />
     <ClInclude Include="src\Dessert\Events\KeyEvent.h" />
     <ClInclude Include="src\Dessert\Events\MouseEvent.h" />
     <ClInclude Include="src\Dessert\ImGui\ImGuiLayer.h" />
-    <ClInclude Include="src\Dessert\Input.h" />
-    <ClInclude Include="src\Dessert\KeyCodes.h" />
-    <ClInclude Include="src\Dessert\Layer.h" />
-    <ClInclude Include="src\Dessert\LayerStack.h" />
-    <ClInclude Include="src\Dessert\Log.h" />
-    <ClInclude Include="src\Dessert\MouseButtonsCodes.h" />
-    <ClInclude Include="src\Dessert\OrthographicCameraController.h" />
     <ClInclude Include="src\Dessert\Renderer\Buffer.h" />
     <ClInclude Include="src\Dessert\Renderer\Camera.h" />
     <ClInclude Include="src\Dessert\Renderer\GraphicsContext.h" />
     <ClInclude Include="src\Dessert\Renderer\Material.h" />
+    <ClInclude Include="src\Dessert\Renderer\OrthographicCameraController.h" />
     <ClInclude Include="src\Dessert\Renderer\RenderCommand.h" />
     <ClInclude Include="src\Dessert\Renderer\Renderer.h" />
     <ClInclude Include="src\Dessert\Renderer\RendererAPI.h" />
     <ClInclude Include="src\Dessert\Renderer\Shader.h" />
     <ClInclude Include="src\Dessert\Renderer\Texture.h" />
     <ClInclude Include="src\Dessert\Renderer\VertexArray.h" />
-    <ClInclude Include="src\Dessert\Window.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLRendererAPI.h" />
@@ -598,16 +598,16 @@
     <ClInclude Include="vendor\stb_image\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Dessert\Application.cpp" />
+    <ClCompile Include="src\Dessert\Core\Application.cpp" />
+    <ClCompile Include="src\Dessert\Core\Layer.cpp" />
+    <ClCompile Include="src\Dessert\Core\LayerStack.cpp" />
+    <ClCompile Include="src\Dessert\Core\Log.cpp" />
     <ClCompile Include="src\Dessert\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\Dessert\ImGui\ImGuiLayer.cpp" />
-    <ClCompile Include="src\Dessert\Layer.cpp" />
-    <ClCompile Include="src\Dessert\LayerStack.cpp" />
-    <ClCompile Include="src\Dessert\Log.cpp" />
-    <ClCompile Include="src\Dessert\OrthographicCameraController.cpp" />
     <ClCompile Include="src\Dessert\Renderer\Buffer.cpp" />
     <ClCompile Include="src\Dessert\Renderer\Camera.cpp" />
     <ClCompile Include="src\Dessert\Renderer\Material.cpp" />
+    <ClCompile Include="src\Dessert\Renderer\OrthographicCameraController.cpp" />
     <ClCompile Include="src\Dessert\Renderer\RenderCommand.cpp" />
     <ClCompile Include="src\Dessert\Renderer\Renderer.cpp" />
     <ClCompile Include="src\Dessert\Renderer\RendererAPI.cpp" />

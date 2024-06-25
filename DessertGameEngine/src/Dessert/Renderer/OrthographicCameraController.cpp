@@ -1,8 +1,8 @@
 #include "dgepch.h"
 #include "OrthographicCameraController.h"
 
-#include "Dessert/Input.h"
-#include "Dessert/KeyCodes.h"
+#include "Dessert/Core/Input.h"
+#include "Dessert/Core/KeyCodes.h"
 
 
 namespace Dessert {

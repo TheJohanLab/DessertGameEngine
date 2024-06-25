@@ -13,7 +13,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "Dessert/Log.h"
+#include "Dessert/Core/Log.h"
 
 #ifdef DGE_PLATFORM_WINDOWS
 	#include <Windows.h>

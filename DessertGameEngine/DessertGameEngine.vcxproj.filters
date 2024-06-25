@@ -57,17 +57,38 @@
     <ClInclude Include="src\Dessert.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\Dessert\Application.h">
-      <Filter>src\Dessert</Filter>
+    <ClInclude Include="src\Dessert\Core\Application.h">
+      <Filter>src\Dessert\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Dessert\Core.h">
-      <Filter>src\Dessert</Filter>
+    <ClInclude Include="src\Dessert\Core\Core.h">
+      <Filter>src\Dessert\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Dessert\Core\EntryPoint.h">
+      <Filter>src\Dessert\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Dessert\Core\Input.h">
+      <Filter>src\Dessert\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Dessert\Core\KeyCodes.h">
+      <Filter>src\Dessert\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Dessert\Core\Layer.h">
+      <Filter>src\Dessert\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Dessert\Core\LayerStack.h">
+      <Filter>src\Dessert\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Dessert\Core\Log.h">
+      <Filter>src\Dessert\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Dessert\Core\MouseButtonsCodes.h">
+      <Filter>src\Dessert\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Dessert\Core\Timestep.h">
       <Filter>src\Dessert\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Dessert\EntryPoint.h">
-      <Filter>src\Dessert</Filter>
+    <ClInclude Include="src\Dessert\Core\Window.h">
+      <Filter>src\Dessert\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Dessert\Events\ApplicationEvent.h">
       <Filter>src\Dessert\Events</Filter>
@@ -84,24 +105,6 @@
     <ClInclude Include="src\Dessert\ImGui\ImGuiLayer.h">
       <Filter>src\Dessert\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="src\Dessert\Input.h">
-      <Filter>src\Dessert</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Dessert\KeyCodes.h">
-      <Filter>src\Dessert</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Dessert\Layer.h">
-      <Filter>src\Dessert</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Dessert\LayerStack.h">
-      <Filter>src\Dessert</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Dessert\Log.h">
-      <Filter>src\Dessert</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Dessert\MouseButtonsCodes.h">
-      <Filter>src\Dessert</Filter>
-    </ClInclude>
     <ClInclude Include="src\Dessert\Renderer\Buffer.h">
       <Filter>src\Dessert\Renderer</Filter>
     </ClInclude>
@@ -112,6 +115,9 @@
       <Filter>src\Dessert\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Dessert\Renderer\Material.h">
+      <Filter>src\Dessert\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Dessert\Renderer\OrthographicCameraController.h">
       <Filter>src\Dessert\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Dessert\Renderer\RenderCommand.h">
@@ -131,9 +137,6 @@
     </ClInclude>
     <ClInclude Include="src\Dessert\Renderer\VertexArray.h">
       <Filter>src\Dessert\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Dessert\Window.h">
-      <Filter>src\Dessert</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h">
       <Filter>src\Platform\OpenGL</Filter>
@@ -1410,26 +1413,25 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="src\Dessert\OrthographicCameraController.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Dessert\Application.cpp">
-      <Filter>src\Dessert</Filter>
+    <ClCompile Include="src\Dessert\Core\Application.cpp">
+      <Filter>src\Dessert\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Dessert\Core\Layer.cpp">
+      <Filter>src\Dessert\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Dessert\Core\LayerStack.cpp">
+      <Filter>src\Dessert\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Dessert\Core\Log.cpp">
+      <Filter>src\Dessert\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Dessert\ImGui\ImGuiBuild.cpp">
       <Filter>src\Dessert\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="src\Dessert\ImGui\ImGuiLayer.cpp">
       <Filter>src\Dessert\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Dessert\Layer.cpp">
-      <Filter>src\Dessert</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Dessert\LayerStack.cpp">
-      <Filter>src\Dessert</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Dessert\Log.cpp">
-      <Filter>src\Dessert</Filter>
     </ClCompile>
     <ClCompile Include="src\Dessert\Renderer\Buffer.cpp">
       <Filter>src\Dessert\Renderer</Filter>
@@ -1438,6 +1440,9 @@
       <Filter>src\Dessert\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Dessert\Renderer\Material.cpp">
+      <Filter>src\Dessert\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Dessert\Renderer\OrthographicCameraController.cpp">
       <Filter>src\Dessert\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Dessert\Renderer\RenderCommand.cpp">
@@ -1488,6 +1493,5 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\Dessert\OrthographicCameraController.cpp" />
   </ItemGroup>
 </Project>

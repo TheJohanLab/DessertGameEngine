@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Dessert/Core.h"
+#include "Dessert/Core/Core.h"
 #include "dgepch.h"
 
 namespace Dessert {

@@ -6,7 +6,7 @@
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
 
-#include "Dessert/Application.h"
+#include "Dessert/Core/Application.h"
 
 
 //Temporary

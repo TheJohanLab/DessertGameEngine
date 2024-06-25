@@ -2,19 +2,18 @@
 
 // For use by Dessert Applications
 
-#include "Dessert/Application.h"
-#include "Dessert/Layer.h"
-#include "Dessert/Log.h"
+#include "Dessert/Core/Application.h"
+#include "Dessert/Core/Layer.h"
+#include "Dessert/Core/Log.h"
 
 #include "Dessert/Core/Timestep.h"
 
-#include "Dessert/Input.h"
-#include "Dessert/MouseButtonsCodes.h"
-#include "Dessert/KeyCodes.h"
+#include "Dessert/Core/Input.h"
+#include "Dessert/Core/MouseButtonsCodes.h"
+#include "Dessert/Core/KeyCodes.h"
 
 #include "Dessert/ImGui/ImGuiLayer.h"
 
-#include "Dessert/OrthographicCameraController.h"
 
 // ------ Renderer -----
 #include "Dessert/Renderer/Renderer.h"
@@ -26,9 +25,10 @@
 #include "Dessert/Renderer/VertexArray.h"
 
 #include "Dessert/Renderer/Camera.h"
+#include "Dessert/Renderer/OrthographicCameraController.h"
 // ------ Renderer -----
 
 
 // ------ Entry Point -----
-#include "Dessert/EntryPoint.h"
+#include "Dessert/Core/EntryPoint.h"
 // ------ Entry Point -----

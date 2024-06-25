@@ -2,7 +2,7 @@
 
 #include "dgepch.h"
 
-#include "Dessert/Core.h"
+#include "Dessert/Core/Core.h"
 #include "Dessert/Events/Event.h"
 
 

@@ -3,7 +3,7 @@
 #include "WindowsInput.h"
 
 #include "GLFW/glfw3.h"
-#include "Dessert/Application.h"
+#include "Dessert/Core/Application.h"
 
 namespace Dessert {
 
