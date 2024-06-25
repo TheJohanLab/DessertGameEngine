@@ -24,9 +24,18 @@ namespace Dessert {
 		auto shaderSources = PreProcess(source);
 		Compile(shaderSources);
 
+		//assets/shaders/Texture.glsl
+		auto lastSlash = filepath.find_last_of("/\\");
+		lastSlash = lastSlash == std::string::npos ? 0 : lastSlash + 1;
+		auto lastDot = filepath.rfind('.'); //Equivalent to find_last_of but find only this char instead of any of the char for find_last_of
+		auto count = lastDot == std::string::npos ? filepath.size() - lastSlash : lastDot - lastSlash;
+		m_Name = filepath.substr(lastSlash, count);
+	
+
 	}
 
-	OpenGLShader::OpenGLShader(const std::string& vertexSrc, const std::string& fragmentSrc)
+	OpenGLShader::OpenGLShader(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc)
+		:m_Name(name)
 	{
 		std::unordered_map<GLenum, std::string> sources;
 		sources[GL_VERTEX_SHADER] = vertexSrc;
@@ -43,7 +52,7 @@ namespace Dessert {
 	std::string OpenGLShader::ReadFile(const std::string& filepath)
 	{
 		std::string result;
-		std::ifstream in(filepath, std::ios::binary);
+		std::ifstream in(filepath, std::ios::in | std::ios::binary);
 		if (in)
 		{
 			//0 = offset
@@ -94,8 +103,10 @@ namespace Dessert {
 		// Now time to link them together into a program.
 		// Get a program object.
 		GLuint program = glCreateProgram();
-		std::vector<GLenum> glShaderIDs(shaderSources.size());
+		DGE_CORE_ASSERT(shaderSources.size() <= 2, "Only 2 shaders are supported");
+		std::array<GLenum, 2> glShadersIDs;
 
+		int glShaderIDIndex = 0;
 		for (auto& keyValue : shaderSources)
 		{
 			GLenum shaderType = keyValue.first;
@@ -134,7 +145,7 @@ namespace Dessert {
 
 			// Attach our shaders to our program
 			glAttachShader(program, shader);
-			glShaderIDs.push_back(shader);
+			glShadersIDs[glShaderIDIndex++] = shader;
 		}
 
 		
@@ -156,7 +167,7 @@ namespace Dessert {
 			// We don't need the program anymore.
 			glDeleteProgram(program);
 			// Don't leak shaders either.
-			for (auto id : glShaderIDs)
+			for (auto id : glShadersIDs)
 				glDeleteShader(id);
 			
 
@@ -167,7 +178,7 @@ namespace Dessert {
 		}
 
 		// Always detach shaders after a successful link.
-		for (auto id : glShaderIDs)
+		for (auto id : glShadersIDs)
 			glDetachShader(program, id);
 
 		m_RendererId = program;

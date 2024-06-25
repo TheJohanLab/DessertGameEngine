@@ -117,7 +117,7 @@ public:
 
 		)";
 
-		m_Shader.reset(Dessert::Shader::Create(vertexSrc, fragmentSrc));
+		m_Shader = Dessert::Shader::Create("VertexColorLosange", vertexSrc, fragmentSrc);
 
 		//Shaders
 		std::string flatColorShaderVertexSrc = R"(
@@ -155,16 +155,16 @@ public:
 
 		)";
 
-		m_flatColorShader.reset(Dessert::Shader::Create(flatColorShaderVertexSrc, flatColorShaderFragmentSrc));
+		m_flatColorShader = Dessert::Shader::Create("FlatColor", flatColorShaderVertexSrc, flatColorShaderFragmentSrc);
 
 
-		m_TextureShader.reset(Dessert::Shader::Create("assets/shaders/Texture.glsl"));
+		auto textureShader = m_ShaderLibrary.Load("assets/shaders/Texture.glsl");
 		
 		m_Texture = Dessert::Texture2D::Create("assets/textures/CheckerBoard.png");
 		m_ButtonTexture = Dessert::Texture2D::Create("assets/textures/pushBtn.png");
 
-		std::dynamic_pointer_cast<Dessert::OpenGLShader>(m_TextureShader)->Bind();
-		std::dynamic_pointer_cast<Dessert::OpenGLShader>(m_TextureShader)->setUniformInt("u_Texture", 0); // 0 is the texture slot
+		std::dynamic_pointer_cast<Dessert::OpenGLShader>(textureShader)->Bind();
+		std::dynamic_pointer_cast<Dessert::OpenGLShader>(textureShader)->setUniformInt("u_Texture", 0); // 0 is the texture slot
 		/*Dessert::Material* material = new Dessert::Material(m_flatColorShader);
 		Dessert::MaterialInstanceRef* materialInstance = new Dessert::MaterialInstance(material);*/
 
@@ -244,10 +244,11 @@ public:
 			}
 		}
 
+		auto textureShader = m_ShaderLibrary.Get("Texture");
 		m_Texture->Bind();
-		Dessert::Renderer::Submit(m_TextureShader, m_SquareVertexArray, glm::scale(glm::mat4(1.0f), glm::vec3(1.0f)));
+		Dessert::Renderer::Submit(textureShader, m_SquareVertexArray, glm::scale(glm::mat4(1.0f), glm::vec3(1.0f)));
 		m_ButtonTexture->Bind();
-		Dessert::Renderer::Submit(m_TextureShader, m_SquareVertexArray, 
+		Dessert::Renderer::Submit(textureShader, m_SquareVertexArray,
 			 glm::scale(glm::mat4(1.0f), glm::vec3(1.0f)));
 		//Dessert::Renderer::Submit(m_Shader, m_VertexArray);
 
@@ -272,11 +273,12 @@ public:
 	}
 
 	private:
+		Dessert::ShaderLibrary m_ShaderLibrary;
+
 		Dessert::Ref<Dessert::Shader> m_Shader;
 		Dessert::Ref<Dessert::VertexArray> m_VertexArray;
 
 		Dessert::Ref<Dessert::Shader> m_flatColorShader;
-		Dessert::Ref<Dessert::Shader> m_TextureShader;
 		Dessert::Ref<Dessert::VertexArray> m_SquareVertexArray;
 
 		Dessert::Ref<Dessert::Texture2D> m_Texture;
