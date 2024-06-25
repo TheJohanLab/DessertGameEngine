@@ -23,6 +23,8 @@ namespace Dessert {
 		LayerStack m_LayerStack;
 		float m_LastFrameTime = 0.0f;
 
+		bool m_Minimized = false;
+
 	private:
 		static Application* s_Instance;
 
@@ -46,6 +48,7 @@ namespace Dessert {
 	private:
 		void initApplication();
 		bool OnWindowClose(WindowCloseEvent& e);
+		bool OnWindowResize(WindowResizeEvent& e);
 	};
 
 	//To be defined in the client

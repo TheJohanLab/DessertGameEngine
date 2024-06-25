@@ -12,6 +12,11 @@ namespace Dessert {
 		RenderCommand::Init();
 	}
 
+	void Renderer::OnWindowResize(uint32_t width, uint32_t height)
+	{
+		RenderCommand::SetViewport(0, 0, width, height);
+	}
+
 	void Renderer::BeginScene(const Camera& camera)
 	{
 		glm::mat4 modelMatrix = glm::mat4(1.0f);

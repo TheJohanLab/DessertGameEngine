@@ -10,10 +10,7 @@ class ExampleLayer : public Dessert::Layer
 public:
 	ExampleLayer()
 		:Layer("Example"), 
-		m_Camera(-1.6f, 1.6f, -0.9f, 0.9f),
-		m_CameraPosition(0.0f, 0.0f, 0.0f),
-		m_CameraRotation(0.0f, 0.0f, 0.0f),
-		m_CameraScale(1.0f, 1.0f, 1.0f)
+	    m_CameraController(1280.0f / 720.0f, true)
 	{
 
 		m_VertexArray.reset(Dessert::VertexArray::Create());
@@ -173,59 +170,13 @@ public:
 
 	void OnUpdate(Dessert::Timestep delta) override
 	{
-		//DGE_TRACE("Delta time: {0} ({1}ms)", delta.GetSeconds(), delta.GetMilliseconds());
-
-		// --------- Camera ------------
-
-		if (Dessert::Input::isKeyPressed(DGE_KEY_LEFT))
-		{
-			m_CameraPosition.x -= m_CameraMoveSpeed * delta;
-		}
-		else if (Dessert::Input::isKeyPressed(DGE_KEY_RIGHT))
-		{
-			m_CameraPosition.x += m_CameraMoveSpeed * delta;
-		}
-
-		if (Dessert::Input::isKeyPressed(DGE_KEY_P))
-		{
-			m_CameraScale.x -= 0.11 * delta;
-			m_CameraScale.y -= 0.11 * delta;
-		}
-		else if (Dessert::Input::isKeyPressed(DGE_KEY_Z))
-		{
-			m_CameraScale.x += 0.11 * delta;
-			m_CameraScale.y += 0.11 * delta;
-		}
-
-		if (Dessert::Input::isKeyPressed(DGE_KEY_UP))
-		{
-			m_CameraPosition.y += m_CameraMoveSpeed * delta;
-		}
-		else if (Dessert::Input::isKeyPressed(DGE_KEY_DOWN))
-		{
-			m_CameraPosition.y -= m_CameraMoveSpeed * delta;
-		}
-
-		if (Dessert::Input::isKeyPressed(DGE_KEY_A))
-		{
-			m_CameraRotation.z += m_CameraRotationSpeed * delta;
-		}
-		if (Dessert::Input::isKeyPressed(DGE_KEY_D))
-		{
-			m_CameraRotation.z -= m_CameraRotationSpeed * delta;
-		}
-
-
-
+		m_CameraController.OnUpdate(delta);
 
 		Dessert::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 		Dessert::RenderCommand::Clear();
 
-		m_Camera.setTransformPosition(m_CameraPosition);
-		m_Camera.setTransformRotation(m_CameraRotation);
-		m_Camera.setTransformScale(m_CameraScale);
 
-		Dessert::Renderer::BeginScene(m_Camera);
+		Dessert::Renderer::BeginScene(m_CameraController.GetCamera());
 		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
 		std::dynamic_pointer_cast<Dessert::OpenGLShader>(m_flatColorShader)->Bind();
@@ -255,8 +206,16 @@ public:
 		Dessert::Renderer::EndScene();
 	}
 
-	void OnEvent(Dessert::Event& event) override
+	void OnEvent(Dessert::Event& e) override
 	{
+		m_CameraController.OnEvent(e);
+
+		if (e.GetEventType() == Dessert::EventType::WindowResize)
+		{
+			auto& resizeEvent = (Dessert::WindowResizeEvent&)e;
+
+		}
+
 		//Dessert::EventDispatcher dispatcher(event);
 		//dispatcher.Dispatch<Dessert::KeyPressedEvent>(BIND_EVENT_FUNC(ExampleLayer::OnKeyPressed));
 
@@ -284,15 +243,7 @@ public:
 		Dessert::Ref<Dessert::Texture2D> m_Texture;
 		Dessert::Ref<Dessert::Texture2D> m_ButtonTexture;
 
-		Dessert::Camera m_Camera;
-
-		glm::vec3 m_CameraPosition;
-		glm::vec3 m_CameraRotation;
-		glm::vec3 m_CameraScale;
-
-
-		float m_CameraMoveSpeed = 1.0f;
-		float m_CameraRotationSpeed = 50.0f;
+		Dessert::OrthographicCameraController m_CameraController;
 
 		glm::vec3 m_SquareColor = { 0.8f, 0.2f, 0.3f };
 

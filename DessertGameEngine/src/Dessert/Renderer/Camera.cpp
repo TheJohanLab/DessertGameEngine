@@ -16,11 +16,18 @@ namespace Dessert {
 		m_ViewMatrix(glm::mat4(1.0f)),
 		m_Transform({ {0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f}, {1.0f, 1.0f, 1.0f}  })
 	{
-		calculateViewMatrix();
+		//calculateViewMatrix();
+		m_VPMatrix = m_ProjectionMatrix * m_ViewMatrix;
 	}
 
 	Camera::~Camera()
 	{
+	}
+
+	void Camera::setProjection(float left, float right, float bottom, float top)
+	{
+		m_ProjectionMatrix = glm::ortho(left, right, bottom, top, -1.0f, 1.0f);
+		m_VPMatrix = m_ProjectionMatrix * m_ViewMatrix;
 	}
 
 	void Camera::calculateViewMatrix()
@@ -57,4 +64,5 @@ namespace Dessert {
 		m_Transform.Scale = scale;
 		calculateViewMatrix();
 	}
+	
 }

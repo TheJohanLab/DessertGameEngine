@@ -159,6 +159,7 @@
     <ClInclude Include="src\Dessert\LayerStack.h" />
     <ClInclude Include="src\Dessert\Log.h" />
     <ClInclude Include="src\Dessert\MouseButtonsCodes.h" />
+    <ClInclude Include="src\Dessert\OrthographicCameraController.h" />
     <ClInclude Include="src\Dessert\Renderer\Buffer.h" />
     <ClInclude Include="src\Dessert\Renderer\Camera.h" />
     <ClInclude Include="src\Dessert\Renderer\GraphicsContext.h" />
@@ -603,6 +604,7 @@
     <ClCompile Include="src\Dessert\Layer.cpp" />
     <ClCompile Include="src\Dessert\LayerStack.cpp" />
     <ClCompile Include="src\Dessert\Log.cpp" />
+    <ClCompile Include="src\Dessert\OrthographicCameraController.cpp" />
     <ClCompile Include="src\Dessert\Renderer\Buffer.cpp" />
     <ClCompile Include="src\Dessert\Renderer\Camera.cpp" />
     <ClCompile Include="src\Dessert\Renderer\Material.cpp" />

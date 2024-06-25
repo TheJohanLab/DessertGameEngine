@@ -14,6 +14,8 @@
 
 #include "Dessert/ImGui/ImGuiLayer.h"
 
+#include "Dessert/OrthographicCameraController.h"
+
 // ------ Renderer -----
 #include "Dessert/Renderer/Renderer.h"
 #include "Dessert/Renderer/RenderCommand.h"

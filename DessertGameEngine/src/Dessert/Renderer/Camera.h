@@ -27,13 +27,12 @@ namespace Dessert {
 		Camera(float left, float right, float bottom, float top);
 		~Camera();
 		
-
-		void calculateViewMatrix();
-
 		void setTransformPosition(const glm::vec3& position);
 		void setTransformRotation(const glm::vec3& rotation);
 		void setTransformScale(const glm::vec3& scale);
 		void setTransform(const glm::vec3& position, const glm::vec3& rotation, const glm::vec3& scale);
+
+		void setProjection(float left, float right, float bottom, float top);
 
 		const glm::vec3 getTransformPosition() const { return m_Transform.Position; }
 		const glm::vec3 getTransformRotation() const { return m_Transform.Rotation; }
@@ -42,5 +41,10 @@ namespace Dessert {
 		inline const glm::mat4& GetProjectionMatrix() const { return m_ProjectionMatrix; }
 		inline const glm::mat4& GetViewMatrix() const { return m_ViewMatrix; }
 		inline const glm::mat4& GetVPMatrix() const { return m_VPMatrix; }
+	
+	private:
+		void calculateViewMatrix();
 	};
+
+
 }
