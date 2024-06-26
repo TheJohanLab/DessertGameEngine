@@ -23,6 +23,13 @@ namespace Dessert {
 		virtual void Bind() const override;
 		virtual void Unbind() const override;
 
+
+
+		virtual void SetMat4(const char* name, const glm::mat4& value) override;
+		virtual void SetFloat3(const char* name, const glm::vec3& value) override;
+		virtual void SetFloat4(const char* name, const glm::vec4& value) override;
+
+
 		virtual const std::string& GetName() const override { return m_Name; }
 
 		void setUniformMat4(const char* name, const glm::mat4& matrix) const;

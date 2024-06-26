@@ -1,9 +1,13 @@
 #include <Dessert.h>
+#include <Dessert/Core/EntryPoint.h>
+
+
 #include "Platform/OpenGL/OpenGLShader.h"
 
 #include "imgui/imgui.h"
 
 #include <glm/gtc/type_ptr.hpp>
+#include "Sandbox2D.h"
 
 class ExampleLayer : public Dessert::Layer
 {
@@ -13,7 +17,7 @@ public:
 	    m_CameraController(1280.0f / 720.0f, true)
 	{
 
-		m_VertexArray.reset(Dessert::VertexArray::Create());
+		m_VertexArray = Dessert::VertexArray::Create();
 
 		float vertices[4 * 7] = {
 			-0.5f,	 0.0f,	0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
@@ -44,7 +48,7 @@ public:
 		indexBuffer.reset(Dessert::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
 		m_VertexArray->SetIndexBuffer(indexBuffer);
 
-		m_SquareVertexArray.reset(Dessert::VertexArray::Create());
+		m_SquareVertexArray = Dessert::VertexArray::Create();
 
 		float squareVertices[4 * 5] = {
 			-0.5f,  -0.5f,	0.0f, 0.0f, 0.0f,
@@ -85,14 +89,14 @@ public:
 			
 			out vec3 v_Position;
 			out vec4 v_Color;
-			uniform mat4 u_MVPMatrix;
+			uniform mat4 u_VPMatrix;
 			uniform mat4 u_ModelMatrix;
 
 			void main()
 			{
 				v_Position = a_Position;
 				v_Color = a_Color;
-				gl_Position = u_MVPMatrix * u_ModelMatrix * vec4(a_Position, 1.0);
+				gl_Position = u_VPMatrix * u_ModelMatrix * vec4(a_Position, 1.0);
 			}
 
 		)";
@@ -124,13 +128,13 @@ public:
 			layout(location = 0) in vec3 a_Position;			
 			
 			out vec3 v_Position;
-			uniform mat4 u_MVPMatrix;
+			uniform mat4 u_VPMatrix;
 			uniform mat4 u_ModelMatrix;
 
 			void main()
 			{
 				v_Position = a_Position;
-				gl_Position = u_MVPMatrix * u_ModelMatrix * vec4(a_Position, 1.0);
+				gl_Position = u_VPMatrix * u_ModelMatrix * vec4(a_Position, 1.0);
 			}
 
 		)";
@@ -254,7 +258,8 @@ class Sandbox : public Dessert::Application
 public:
 	Sandbox()
 	{
-		PushLayer(new ExampleLayer());
+		//PushLayer(new ExampleLayer());
+		PushLayer(new Sandbox2D());
 	}
 
 	~Sandbox()

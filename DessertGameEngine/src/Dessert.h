@@ -17,6 +17,7 @@
 
 // ------ Renderer -----
 #include "Dessert/Renderer/Renderer.h"
+#include "Dessert/Renderer/Renderer2D.h"
 #include "Dessert/Renderer/RenderCommand.h"
 
 #include "Dessert/Renderer/Buffer.h"
@@ -30,5 +31,5 @@
 
 
 // ------ Entry Point -----
-#include "Dessert/Core/EntryPoint.h"
+//#include "Dessert/Core/EntryPoint.h"
 // ------ Entry Point -----

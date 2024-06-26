@@ -1,7 +1,8 @@
 #include "dgepch.h"
 #include "Renderer.h"
 
-#include "glad/glad.h"
+#include "Platform/OpenGL/OpenGLShader.h"
+#include "Renderer2D.h"
 
 namespace Dessert {
 	
@@ -10,6 +11,7 @@ namespace Dessert {
 	void Renderer::Init()
 	{
 		RenderCommand::Init();
+		Renderer2D::Init();
 	}
 
 	void Renderer::OnWindowResize(uint32_t width, uint32_t height)
@@ -34,7 +36,7 @@ namespace Dessert {
 		const glm::mat4& transformMatrix)
 	{
 		shader->Bind();
-		std::dynamic_pointer_cast<OpenGLShader>(shader)->setUniformMat4("u_MVPMatrix", m_SceneData->m_VPMatrix);
+		std::dynamic_pointer_cast<OpenGLShader>(shader)->setUniformMat4("u_VPMatrix", m_SceneData->m_VPMatrix);
 		std::dynamic_pointer_cast<OpenGLShader>(shader)->setUniformMat4("u_ModelMatrix", transformMatrix);
 
 		vertexArray->Bind();

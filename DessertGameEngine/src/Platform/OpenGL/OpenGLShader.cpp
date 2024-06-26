@@ -194,6 +194,21 @@ namespace Dessert {
 	{
 		glUseProgram(0);
 	}
+	void OpenGLShader::SetMat4(const char* name, const glm::mat4& value)
+	{
+		setUniformMat4(name, value);
+	}
+
+	void OpenGLShader::SetFloat3(const char* name, const glm::vec3& value)
+	{
+		setUniformFloat3(name, value);
+	}
+
+	void OpenGLShader::SetFloat4(const char* name, const glm::vec4& value)
+	{
+		setUniformFloat4(name, value);
+	}
+
 	void OpenGLShader::setUniformMat4(const char* name, const glm::mat4& matrix) const
 	{
 		glUniformMatrix4fv(glGetUniformLocation(m_RendererId, name), 1, GL_FALSE, glm::value_ptr(matrix));

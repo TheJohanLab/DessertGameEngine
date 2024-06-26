@@ -6,13 +6,13 @@ layout(location = 1) in vec2 a_TextureCoord;
 			
 out vec2 v_TextCoord;
 
-uniform mat4 u_MVPMatrix;
+uniform mat4 u_VPMatrix;
 uniform mat4 u_ModelMatrix;
 
 void main()
 {
 	v_TextCoord = a_TextureCoord;
-	gl_Position = u_MVPMatrix * u_ModelMatrix * vec4(a_Position, 1.0);
+	gl_Position = u_VPMatrix * u_ModelMatrix * vec4(a_Position, 1.0);
 }
 
 #type fragment
