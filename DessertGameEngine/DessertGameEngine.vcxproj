@@ -155,6 +155,7 @@
     <ClInclude Include="src\Dessert\Core\MouseButtonsCodes.h" />
     <ClInclude Include="src\Dessert\Core\Timestep.h" />
     <ClInclude Include="src\Dessert\Core\Window.h" />
+    <ClInclude Include="src\Dessert\Debug\Profiler.h" />
     <ClInclude Include="src\Dessert\Events\ApplicationEvent.h" />
     <ClInclude Include="src\Dessert\Events\Event.h" />
     <ClInclude Include="src\Dessert\Events\KeyEvent.h" />

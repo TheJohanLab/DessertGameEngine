@@ -15,6 +15,8 @@
 
 #include "Dessert/Core/Log.h"
 
+#include "Dessert/Debug/Profiler.h"
+
 #ifdef DGE_PLATFORM_WINDOWS
 	#include <Windows.h>
 #endif
