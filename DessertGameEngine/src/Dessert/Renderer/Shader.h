@@ -16,6 +16,7 @@ namespace Dessert {
 		virtual void Unbind() const = 0;
 
 		virtual void SetMat4(const char* name, const glm::mat4& value) = 0;
+		virtual void SetInt(const char* name, int value) = 0;
 		virtual void SetFloat3(const char* name, const glm::vec3& value) = 0;
 		virtual void SetFloat4(const char* name, const glm::vec4& value) = 0;
 

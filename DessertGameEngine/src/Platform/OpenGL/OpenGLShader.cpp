@@ -199,6 +199,11 @@ namespace Dessert {
 		setUniformMat4(name, value);
 	}
 
+	void OpenGLShader::SetInt(const char* name, int value)
+	{
+		setUniformInt(name, value);
+	}
+
 	void OpenGLShader::SetFloat3(const char* name, const glm::vec3& value)
 	{
 		setUniformFloat3(name, value);
