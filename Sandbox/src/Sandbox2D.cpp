@@ -11,7 +11,7 @@
 //{
 //public:
 //	Timer(const char* name, Fn&& func)
-//		:m_Name(name), m_Func(func), m_Stopped(false)
+//		:m_Name(name), m_Func(std::forward<Fn>(func)), m_Stopped(false)
 //	{
 //		m_StartTimePoint = std::chrono::high_resolution_clock::now();
 //	}
@@ -52,23 +52,25 @@ Sandbox2D::Sandbox2D()
 
 void Sandbox2D::OnAttach()
 {
+	DGE_PROFILE_FUNCTION()
+
 	m_Texture = Dessert::Texture2D::Create("assets/textures/CheckerBoard.png");
 	
 }
 
 void Sandbox2D::OnDetach()
 {
+	DGE_PROFILE_FUNCTION()
 }
 
 void Sandbox2D::OnUpdate(Dessert::Timestep delta)
 {
 	//PROFILE_SCOPE("Sandbox2D::OnUpdate"); Ancienne version
-	DGE_PROFILE_SCOPE("name")
+	DGE_PROFILE_FUNCTION()
 		
-	{
-		DGE_PROFILE_SCOPE("CameraController::OnUpdate");
-		m_CameraController.OnUpdate(delta);
-	}
+
+	m_CameraController.OnUpdate(delta);
+	
 
 	{
 		DGE_PROFILE_SCOPE("Renderer Prep");
@@ -78,10 +80,13 @@ void Sandbox2D::OnUpdate(Dessert::Timestep delta)
 
 	{
 		DGE_PROFILE_SCOPE("Renderer Draw");
+
 		Dessert::Renderer2D::BeginScene(m_CameraController.GetCamera());
+
 		Dessert::Renderer2D::DrawQuad({ -1.0f, 0.0f }, { 0.8f, 0.8f }, { 0.8f, 0.2f, 0.3f, 1.0f });
+		Dessert::Renderer2D::DrawRotatedQuad({ -0.25f, 0.25f }, { 0.2f, 0.2f }, glm::radians(45.0f) , { 0.8f, 0.2f, 0.3f, 1.0f });
 		Dessert::Renderer2D::DrawQuad({ 0.5f, -0.5f }, { 0.5f, 0.75f }, { 0.2f, 0.3f, 0.8f, 1.0f });
-		Dessert::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 4.0f, 4.0f }, m_Texture, { 0.2f, 0.3f, 0.8f, 0.5f });
+		Dessert::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 4.0f, 4.0f }, m_Texture, 10.0f, glm::vec4(1.0f, 0.5f, 0.5f, 1.0f));
 
 		Dessert::Renderer2D::EndScene();
 	}

@@ -18,8 +18,11 @@ namespace Dessert {
 		DGE_CORE_ASSERT(false, "Unknown shader type");
 		return 0;
 	}
+
 	OpenGLShader::OpenGLShader(const std::string& filepath)
 	{
+		DGE_PROFILE_FUNCTION();
+
 		std::string source = ReadFile(filepath);
 		auto shaderSources = PreProcess(source);
 		Compile(shaderSources);
@@ -37,6 +40,8 @@ namespace Dessert {
 	OpenGLShader::OpenGLShader(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc)
 		:m_Name(name)
 	{
+		DGE_PROFILE_FUNCTION();
+
 		std::unordered_map<GLenum, std::string> sources;
 		sources[GL_VERTEX_SHADER] = vertexSrc;
 		sources[GL_FRAGMENT_SHADER] = fragmentSrc;
@@ -45,12 +50,16 @@ namespace Dessert {
 
 	OpenGLShader::~OpenGLShader()
 	{
+		DGE_PROFILE_FUNCTION();
+
 		glDeleteProgram(m_RendererId);
 	}
 
 
 	std::string OpenGLShader::ReadFile(const std::string& filepath)
 	{
+		DGE_PROFILE_FUNCTION();
+
 		std::string result;
 		std::ifstream in(filepath, std::ios::in | std::ios::binary);
 		if (in)
@@ -72,6 +81,8 @@ namespace Dessert {
 
 	std::unordered_map<GLenum, std::string> OpenGLShader::PreProcess(const std::string& source)
 	{
+		DGE_PROFILE_FUNCTION();
+
 		std::unordered_map<GLenum, std::string> shaderSources;
 
 		const char* typeToken = "#type";
@@ -99,6 +110,8 @@ namespace Dessert {
 
 	void OpenGLShader::Compile(const std::unordered_map<GLenum, std::string>& shaderSources)
 	{
+		DGE_PROFILE_FUNCTION();
+
 		// Vertex and fragment shaders are successfully compiled.
 		// Now time to link them together into a program.
 		// Get a program object.
@@ -187,30 +200,56 @@ namespace Dessert {
 
 	void OpenGLShader::Bind() const
 	{
+		DGE_PROFILE_FUNCTION();
+
 		glUseProgram(m_RendererId);
 	}
 
 	void OpenGLShader::Unbind() const
 	{
+		DGE_PROFILE_FUNCTION();
+
 		glUseProgram(0);
 	}
 	void OpenGLShader::SetMat4(const char* name, const glm::mat4& value)
 	{
+		DGE_PROFILE_FUNCTION();
+
 		setUniformMat4(name, value);
 	}
 
 	void OpenGLShader::SetInt(const char* name, int value)
 	{
+		DGE_PROFILE_FUNCTION();
+
 		setUniformInt(name, value);
+	}
+
+	void OpenGLShader::SetFloat(const char* name, float value)
+	{
+		DGE_PROFILE_FUNCTION();
+
+		setUniformFloat(name, value);
+	}
+
+	void OpenGLShader::SetFloat2(const char* name, const glm::vec2& value)
+	{
+		DGE_PROFILE_FUNCTION();
+
+		setUniformFloat2(name, value);
 	}
 
 	void OpenGLShader::SetFloat3(const char* name, const glm::vec3& value)
 	{
+		DGE_PROFILE_FUNCTION();
+
 		setUniformFloat3(name, value);
 	}
 
 	void OpenGLShader::SetFloat4(const char* name, const glm::vec4& value)
 	{
+		DGE_PROFILE_FUNCTION();
+
 		setUniformFloat4(name, value);
 	}
 

@@ -14,6 +14,8 @@ namespace Dessert {
 
 	void OpenGLContext::Init()
 	{
+		DGE_PROFILE_FUNCTION();
+
 		glfwMakeContextCurrent(m_WindowHandle);
 		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 		DGE_CORE_ASSERT(status, "Failed to initialize Glad");
@@ -26,6 +28,8 @@ namespace Dessert {
 
 	void OpenGLContext::SwapBuffers()
 	{
+		DGE_PROFILE_FUNCTION();
+
 		glfwSwapBuffers(m_WindowHandle);
 	}
 

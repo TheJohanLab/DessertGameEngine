@@ -20,6 +20,8 @@ namespace Dessert {
 
 	void Renderer2D::Init()
 	{
+		DGE_PROFILE_FUNCTION();
+
 		s_SceneData = new Renderer2DStorage;
 
 		s_SceneData->QuadVertexArray = VertexArray::Create();
@@ -66,11 +68,15 @@ namespace Dessert {
 
 	void Renderer2D::Shutdown()
 	{
+		DGE_PROFILE_FUNCTION();
+
 		delete s_SceneData;
 	}
 
 	void Renderer2D::BeginScene(const Camera& camera)
 	{
+		DGE_PROFILE_FUNCTION();
+
 		s_SceneData->TextureShader->Bind();
 		s_SceneData->TextureShader->SetMat4("u_VPMatrix", camera.GetVPMatrix());
 		
@@ -78,6 +84,8 @@ namespace Dessert {
 
 	void Renderer2D::EndScene()
 	{
+		DGE_PROFILE_FUNCTION();
+
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color)
@@ -88,7 +96,10 @@ namespace Dessert {
 
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
 	{
+		DGE_PROFILE_FUNCTION();
+
 		s_SceneData->TextureShader->SetFloat4("u_Color", color);
+		s_SceneData->TextureShader->SetFloat("u_TileMultiplier", 1.0f);
 		s_SceneData->WhiteTexture->Bind();
 
 		glm::mat4 transform = glm::translate(glm::mat4(1.0), position) * // Rotation
@@ -100,18 +111,68 @@ namespace Dessert {
 		RenderCommand::DrawIndexed(s_SceneData->QuadVertexArray);
 	}
 
-	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, const glm::vec4& color)
+	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, float tileMultiplier, const glm::vec4& color)
 	{
-		DrawQuad({ position.x, position.y, 0.0f }, size, texture, color);
+		DrawQuad({ position.x, position.y, 0.0f }, size, texture, tileMultiplier, color);
 	}
 
-	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, const glm::vec4& color)
+	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, float tileMultiplier, const glm::vec4& color)
 	{
+		DGE_PROFILE_FUNCTION();
+
 		s_SceneData->TextureShader->SetFloat4("u_Color", color);
+		s_SceneData->TextureShader->SetFloat("u_TileMultiplier", tileMultiplier);
 		texture->Bind();
 
 		glm::mat4 transform = glm::translate(glm::mat4(1.0), position) * // Rotation
 			glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+
+		s_SceneData->TextureShader->SetMat4("u_Transform", transform);
+
+
+		s_SceneData->QuadVertexArray->Bind();
+		RenderCommand::DrawIndexed(s_SceneData->QuadVertexArray);
+	}
+
+	void Renderer2D::DrawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float rotation, const glm::vec4& color)
+	{
+		DrawRotatedQuad({ position.x, position.y, 0.0f }, size, rotation, color);
+	}
+
+	void Renderer2D::DrawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotation, const glm::vec4& color)
+	{
+		DGE_PROFILE_FUNCTION();
+
+		s_SceneData->TextureShader->SetFloat4("u_Color", color);
+		s_SceneData->TextureShader->SetFloat("u_TileMultiplier", 1.0f);
+		s_SceneData->WhiteTexture->Bind();
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0), position) 
+			* glm::rotate(glm::mat4(1.0f), rotation, { 0.0f, 0.0f, 1.0f })
+			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+
+		s_SceneData->TextureShader->SetMat4("u_Transform", transform);
+
+		s_SceneData->QuadVertexArray->Bind();
+		RenderCommand::DrawIndexed(s_SceneData->QuadVertexArray);
+	}
+
+	void Renderer2D::DrawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float rotation, const Ref<Texture2D>& texture, float tileMultiplier, const glm::vec4& color)
+	{
+		DrawRotatedQuad({ position.x, position.y, 0.0f }, size, rotation, texture, tileMultiplier, color);
+	}
+
+	void Renderer2D::DrawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotation, const Ref<Texture2D>& texture, float tileMultiplier, const glm::vec4& color)
+	{
+		DGE_PROFILE_FUNCTION();
+
+		s_SceneData->TextureShader->SetFloat4("u_Color", color);
+		s_SceneData->TextureShader->SetFloat("u_TileMultiplier", tileMultiplier);
+		texture->Bind();
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0), position)
+			* glm::rotate(glm::mat4(1.0f), rotation, { 0.0f, 0.0f, 1.0f })
+			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 
 		s_SceneData->TextureShader->SetMat4("u_Transform", transform);
 

@@ -28,26 +28,36 @@ namespace Dessert {
 
 	OpenGLVertexArray::OpenGLVertexArray()
 	{
+		DGE_PROFILE_FUNCTION();
+
 		glCreateVertexArrays(1, &m_RendererId);
 	}
 
 	OpenGLVertexArray::~OpenGLVertexArray()
 	{
+		DGE_PROFILE_FUNCTION();
+
 		glDeleteVertexArrays(1, &m_RendererId);
 	}
 
 	void OpenGLVertexArray::Bind() const
 	{
+		DGE_PROFILE_FUNCTION();
+
 		glBindVertexArray(m_RendererId);
 	}
 
 	void OpenGLVertexArray::Unbind() const
 	{
+		DGE_PROFILE_FUNCTION();
+
 		glBindVertexArray(0);
 	}
 
 	void OpenGLVertexArray::AddVertexBuffer(const Ref<VertexBuffer>& vertexBuffer)
 	{
+		DGE_PROFILE_FUNCTION();
+
 		DGE_CORE_ASSERT(vertexBuffer->GetLayout().GetElements().size(), "Vertex buffer has no layout");
 
 		glBindVertexArray(m_RendererId);
@@ -75,6 +85,8 @@ namespace Dessert {
 
 	void OpenGLVertexArray::SetIndexBuffer(const Ref<IndexBuffer>& indexBuffer)
 	{
+		DGE_PROFILE_FUNCTION();
+
 		glBindVertexArray(m_RendererId);
 		indexBuffer->Bind();
 	

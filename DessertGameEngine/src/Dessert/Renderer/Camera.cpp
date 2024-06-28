@@ -8,6 +8,8 @@ namespace Dessert {
 		m_ViewMatrix(glm::mat4(1.0f)),
 		m_Transform({ {0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f}, {1.0f, 1.0f, 1.0f} })
 	{
+		DGE_PROFILE_FUNCTION();
+
 		calculateViewMatrix();
 	}
 
@@ -16,6 +18,8 @@ namespace Dessert {
 		m_ViewMatrix(glm::mat4(1.0f)),
 		m_Transform({ {0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f}, {1.0f, 1.0f, 1.0f}  })
 	{
+		DGE_PROFILE_FUNCTION();
+
 		//calculateViewMatrix();
 		m_VPMatrix = m_ProjectionMatrix * m_ViewMatrix;
 	}
@@ -26,12 +30,16 @@ namespace Dessert {
 
 	void Camera::setProjection(float left, float right, float bottom, float top)
 	{
+		DGE_PROFILE_FUNCTION();
+
 		m_ProjectionMatrix = glm::ortho(left, right, bottom, top, -1.0f, 1.0f);
 		m_VPMatrix = m_ProjectionMatrix * m_ViewMatrix;
 	}
 
 	void Camera::calculateViewMatrix()
 	{
+		DGE_PROFILE_FUNCTION();
+
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), m_Transform.Position) *
 			glm::rotate(glm::mat4(1.0f), glm::radians(m_Transform.Rotation.z), glm::vec3(0, 0, 1)) *
 			glm::scale(glm::mat4(1.0f), m_Transform.Scale);

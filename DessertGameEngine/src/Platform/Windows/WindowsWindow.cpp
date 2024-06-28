@@ -12,6 +12,7 @@
 namespace Dessert {
 
 	static bool s_GLFWInitialized = false;
+	static uint32_t s_GLFWWindowCount = 0;
 
 	static void GLFWErrorCallback(int error, const char* description)
 	{
@@ -26,16 +27,22 @@ namespace Dessert {
 
 	Dessert::WindowsWindow::WindowsWindow(const WindowProps& props)
 	{
+		DGE_PROFILE_FUNCTION();
+
 		Init(props);
 	}
 
 	Dessert::WindowsWindow::~WindowsWindow()
 	{
+		DGE_PROFILE_FUNCTION();
+
 		Shutdown();
 	}
 
 	void Dessert::WindowsWindow::Init(const WindowProps& props)
 	{
+		DGE_PROFILE_FUNCTION();
+
 		m_Data.Title = props.Title;
 		m_Data.Width = props.Width;
 		m_Data.Height = props.Height;
@@ -47,14 +54,27 @@ namespace Dessert {
 		if (!s_GLFWInitialized)
 		{
 			//TODO glfwTerminate on system shutdown
-			int success = glfwInit();
+			int success = 0;
+			{
+				DGE_PROFILE_SCOPE("glfwInit");
+
+				success = glfwInit();
+			}
 			DGE_CORE_ASSERT(success, "Could not initialize GLFW");
 			glfwSetErrorCallback(GLFWErrorCallback);
 
 			s_GLFWInitialized = true;
 		}
 
-		m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
+		{
+			DGE_PROFILE_SCOPE("glfwCreateWindow");
+
+			m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
+			++s_GLFWWindowCount;
+		}
+
+		//TODO Create this abstractes Graphic Context class and change it from the OpenGLContext instance creation
+		//m_Context = GraphicsContext::Create(m_Window); 
 		m_Context = new OpenGLContext(m_Window);
 
 		m_Context->Init();
@@ -155,6 +175,8 @@ namespace Dessert {
 
 	void Dessert::WindowsWindow::OnUpdate()
 	{
+		DGE_PROFILE_FUNCTION();
+
 		glfwPollEvents();
 		m_Context->SwapBuffers();
 		
@@ -162,6 +184,8 @@ namespace Dessert {
 
 	void Dessert::WindowsWindow::SetVSync(bool enabled)
 	{
+		DGE_PROFILE_FUNCTION();
+
 		if (enabled)
 			glfwSwapInterval(1);
 		else
@@ -179,7 +203,16 @@ namespace Dessert {
 
 	void Dessert::WindowsWindow::Shutdown()
 	{
+		DGE_PROFILE_FUNCTION();
+
 		glfwDestroyWindow(m_Window);
+		--s_GLFWWindowCount;
+
+		if (s_GLFWWindowCount == 0)
+		{
+			glfwTerminate();
+		}
+
 	}
 
 
