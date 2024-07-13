@@ -2,6 +2,7 @@
 #include "Renderer.h"
 
 #include "Platform/OpenGL/OpenGLShader.h"
+#include "Renderer2Dold.h"
 #include "Renderer2D.h"
 
 namespace Dessert {
@@ -13,6 +14,7 @@ namespace Dessert {
 		DGE_PROFILE_FUNCTION();
 
 		RenderCommand::Init();
+		Renderer2Dold::Init();
 		Renderer2D::Init();
 	}
 

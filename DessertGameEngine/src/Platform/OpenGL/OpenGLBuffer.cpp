@@ -19,6 +19,16 @@ namespace Dessert {
 
 	}
 
+	OpenGLVertexBuffer::OpenGLVertexBuffer(uint32_t size)
+	{
+		DGE_PROFILE_FUNCTION();
+
+		glCreateBuffers(1, &m_RendererId);
+		glBindBuffer(GL_ARRAY_BUFFER, m_RendererId);
+		//The vertex array has no date during creation
+		glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_DYNAMIC_DRAW); //DYNAMIC_DRAW is just a hint for OpenGL
+	}
+
 	OpenGLVertexBuffer::~OpenGLVertexBuffer()
 	{
 		DGE_PROFILE_FUNCTION();
@@ -38,6 +48,12 @@ namespace Dessert {
 		DGE_PROFILE_FUNCTION();
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
+
+	void OpenGLVertexBuffer::SetData(const void* data, uint32_t size)
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, m_RendererId);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
 	}
 
 

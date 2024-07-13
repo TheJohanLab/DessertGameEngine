@@ -1413,8 +1413,9 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="src\Dessert\Renderer\Renderer2D.h" />
+    <ClInclude Include="src\Dessert\Renderer\Renderer2Dold.h" />
     <ClInclude Include="src\Dessert\Debug\Profiler.h" />
+    <ClInclude Include="src\Dessert\Renderer\Renderer2D.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Dessert\Core\Application.cpp">
@@ -1495,6 +1496,7 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
+    <ClCompile Include="src\Dessert\Renderer\Renderer2Dold.cpp" />
     <ClCompile Include="src\Dessert\Renderer\Renderer2D.cpp" />
   </ItemGroup>
 </Project>
