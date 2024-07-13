@@ -27,6 +27,7 @@ namespace Dessert {
 
 		virtual void SetMat4(const char* name, const glm::mat4& value) override;
 		virtual void SetInt(const char* name, int value) override;
+		virtual void SetIntArray(const char* name, int* values, uint32_t count) override;
 		virtual void SetFloat(const char* name, float value) override;
 		virtual void SetFloat2(const char* name, const glm::vec2& value) override;
 		virtual void SetFloat3(const char* name, const glm::vec3& value) override;
@@ -38,6 +39,7 @@ namespace Dessert {
 		void setUniformMat4(const char* name, const glm::mat4& matrix) const;
 
 		void setUniformInt(const char* name, int value) const;
+		void setUniformIntArray(const char* name, int* values, uint32_t count) const;
 
 		void setUniformFloat(const char* name, float value) const;
 		void setUniformFloat2(const char* name, const glm::vec2& values) const;

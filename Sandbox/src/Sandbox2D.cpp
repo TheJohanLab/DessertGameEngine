@@ -87,7 +87,8 @@ void Sandbox2D::OnUpdate(Dessert::Timestep delta)
 		//Dessert::Renderer2Dold::DrawRotatedQuad({ -0.25f, 0.25f }, { 0.2f, 0.2f }, glm::radians(45.0f) , { 0.8f, 0.2f, 0.3f, 1.0f });
 		Dessert::Renderer2D::DrawQuad({ -0.25f, 0.25f }, { 0.2f, 0.2f } , { 0.8f, 0.2f, 0.3f, 1.0f });
 		Dessert::Renderer2D::DrawQuad({ 0.5f, -0.5f }, { 0.5f, 0.75f }, { 0.2f, 0.3f, 0.8f, 1.0f });
-		//Dessert::Renderer2Dold::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 4.0f, 4.0f }, m_Texture, 10.0f, glm::vec4(1.0f, 0.5f, 0.5f, 1.0f));
+		Dessert::Renderer2D::DrawQuad({ -0.5f, 0.5f, -0.1f }, { 4.0f, 4.0f }, m_Texture, 10.0f);
+		Dessert::Renderer2D::DrawQuad({ -0.5f, 0.5f, 0.0f }, { 1.0f, 1.0f }, m_Texture, 20.0f);
 
 		Dessert::Renderer2D::EndScene();
 	}

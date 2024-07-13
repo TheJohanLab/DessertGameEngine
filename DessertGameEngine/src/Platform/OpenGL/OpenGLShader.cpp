@@ -225,6 +225,13 @@ namespace Dessert {
 		setUniformInt(name, value);
 	}
 
+	void OpenGLShader::SetIntArray(const char* name, int* values, uint32_t count)
+	{
+		DGE_PROFILE_FUNCTION();
+
+		setUniformIntArray(name, values, count);
+	}
+
 	void OpenGLShader::SetFloat(const char* name, float value)
 	{
 		DGE_PROFILE_FUNCTION();
@@ -261,6 +268,11 @@ namespace Dessert {
 	void OpenGLShader::setUniformInt(const char* name, int value) const
 	{
 		glUniform1i(glGetUniformLocation(m_RendererId, name), value);
+	}
+
+	void OpenGLShader::setUniformIntArray(const char* name, int* values, uint32_t count) const
+	{
+		glUniform1iv(glGetUniformLocation(m_RendererId, name), count, values);
 	}
 
 	void OpenGLShader::setUniformFloat(const char* name, float value) const

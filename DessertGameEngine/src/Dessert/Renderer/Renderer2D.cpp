@@ -14,6 +14,8 @@ namespace Dessert {
 		glm::vec3 Position;
 		glm::vec4 Color;
 		glm::vec2 TexCoord;
+		float TexIndex;
+		float Scale;
 	};
 
 	struct Renderer2DData
@@ -21,6 +23,7 @@ namespace Dessert {
 		const uint32_t maxQuads = 10000;
 		const uint32_t maxVertices = maxQuads * 4;
 		const uint32_t maxIndices = maxQuads * 6;
+		static const uint32_t maxTextureSlots = 32;
 
 
 		Ref<VertexArray> QuadVertexArray;
@@ -32,6 +35,9 @@ namespace Dessert {
 
 		QuadVertex* QuadVertexBufferBase = nullptr;
 		QuadVertex* QuadVertexBufferPtr  = nullptr;
+
+		std::array<Ref<Texture2D>, maxTextureSlots> TextureSlots;
+		uint32_t TextureSlotIndex = 1; // 0 is for the white texture
 	};
 
 	static Renderer2DData s_SceneData;
@@ -50,7 +56,9 @@ namespace Dessert {
 		s_SceneData.QuadVertexBuffer->SetLayout({
 			{ShaderDataType::Float3, "a_Position"},
 			{ShaderDataType::Float4, "a_Color"},
-			{ShaderDataType::Float2, "a_TextureCoord"}
+			{ShaderDataType::Float2, "a_TextureCoord"},
+			{ShaderDataType::Float, "a_TextureIndex"},
+			{ShaderDataType::Float, "a_Scale"}
 			});
 
 
@@ -85,10 +93,17 @@ namespace Dessert {
 		uint32_t whiteTextureData = 0xffffffff;
 		s_SceneData.WhiteTexture->SetData(&whiteTextureData, sizeof(whiteTextureData));
 
+		int32_t samplers[s_SceneData.maxTextureSlots];
+		for (uint32_t i = 0; i < s_SceneData.maxTextureSlots; i++)
+			samplers[i] = i;
+
 		//s_SceneData.FlatColorShader = Shader::Create("assets/shaders/FlatColorShader.glsl");
 		s_SceneData.TextureShader = Shader::Create("assets/shaders/Texture.glsl");
+		s_SceneData.TextureShader->Bind();
+		s_SceneData.TextureShader->SetIntArray("u_Textures", samplers, s_SceneData.maxTextureSlots);
 
-		s_SceneData.TextureShader->SetInt("u_Texture", 0);
+		memset(s_SceneData.TextureSlots.data(), 0, s_SceneData.TextureSlots.size() * sizeof(uint32_t));
+		s_SceneData.TextureSlots[0] = s_SceneData.WhiteTexture;
 
 	}
 
@@ -108,6 +123,8 @@ namespace Dessert {
 		s_SceneData.quadIndexCount = 0;
 		s_SceneData.QuadVertexBufferPtr = s_SceneData.QuadVertexBufferBase;
 
+		s_SceneData.TextureSlotIndex = 1;
+
 	}
 
 	void Renderer2D::EndScene()
@@ -123,6 +140,12 @@ namespace Dessert {
 
 	void Renderer2D::Flush()
 	{
+		for (uint32_t i = 0; i < s_SceneData.TextureSlotIndex; i++)
+		{
+			s_SceneData.TextureSlots[i]->Bind(i);
+		}
+
+
 		RenderCommand::DrawIndexed(s_SceneData.QuadVertexArray, s_SceneData.quadIndexCount);
 	}
 
@@ -136,24 +159,35 @@ namespace Dessert {
 	{
 		DGE_PROFILE_FUNCTION();
 
+		const float texIndex = 0.0f; // white texture
+		const float scale = 1.0f;
+
 		s_SceneData.QuadVertexBufferPtr->Position = position;
 		s_SceneData.QuadVertexBufferPtr->Color = color;
 		s_SceneData.QuadVertexBufferPtr->TexCoord = { 0.0f, 0.0f };
+		s_SceneData.QuadVertexBufferPtr->TexIndex = texIndex;
+		s_SceneData.QuadVertexBufferPtr->Scale = scale;
 		s_SceneData.QuadVertexBufferPtr++;
 
 		s_SceneData.QuadVertexBufferPtr->Position = { position.x + size.x, position.y, 0.0f };
 		s_SceneData.QuadVertexBufferPtr->Color = color;
 		s_SceneData.QuadVertexBufferPtr->TexCoord = { 1.0f, 0.0f };
+		s_SceneData.QuadVertexBufferPtr->TexIndex = texIndex;
+		s_SceneData.QuadVertexBufferPtr->Scale = scale;
 		s_SceneData.QuadVertexBufferPtr++;
 
 		s_SceneData.QuadVertexBufferPtr->Position = { position.x + size.x, position.y + size.y, 0.0f };
 		s_SceneData.QuadVertexBufferPtr->Color = color;
 		s_SceneData.QuadVertexBufferPtr->TexCoord = { 1.0f, 1.0f };
+		s_SceneData.QuadVertexBufferPtr->TexIndex = texIndex;
+		s_SceneData.QuadVertexBufferPtr->Scale = scale;
 		s_SceneData.QuadVertexBufferPtr++;
 
 		s_SceneData.QuadVertexBufferPtr->Position = { position.x, position.y + size.y, 0.0f };
 		s_SceneData.QuadVertexBufferPtr->Color = color;
 		s_SceneData.QuadVertexBufferPtr->TexCoord = { 0.0f, 1.0f };
+		s_SceneData.QuadVertexBufferPtr->TexIndex = texIndex;
+		s_SceneData.QuadVertexBufferPtr->Scale = scale;
 		s_SceneData.QuadVertexBufferPtr++;
 
 		s_SceneData.quadIndexCount += 6;
@@ -179,18 +213,68 @@ namespace Dessert {
 	{
 		DGE_PROFILE_FUNCTION();
 
-		s_SceneData.TextureShader->SetFloat4("u_Color", color);
-		s_SceneData.TextureShader->SetFloat("u_TileMultiplier", tileMultiplier);
-		texture->Bind();
+		//constexpr glm::vec4 color = { 1.0f ,1.0f, 1.0f, 1.0f };
 
-		glm::mat4 transform = glm::translate(glm::mat4(1.0), position) * // Rotation
-			glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+		float textureIndex = 0.0f;
 
-		s_SceneData.TextureShader->SetMat4("u_Transform", transform);
+		for (uint32_t i = 1; i < s_SceneData.TextureSlotIndex; i++)
+		{
+			if (*s_SceneData.TextureSlots[i].get() == *texture.get())
+			{
+				textureIndex = (float)i;
+				break;
+			}
+		}
+
+		if (textureIndex == 0.0f)
+		{
+			textureIndex = (float)s_SceneData.TextureSlotIndex;
+			s_SceneData.TextureSlots[s_SceneData.TextureSlotIndex] = texture;
+			s_SceneData.TextureSlotIndex++;
+		}
+
+		s_SceneData.QuadVertexBufferPtr->Position = position;
+		s_SceneData.QuadVertexBufferPtr->Color = color;
+		s_SceneData.QuadVertexBufferPtr->TexCoord = { 0.0f, 0.0f };
+		s_SceneData.QuadVertexBufferPtr->TexIndex = textureIndex;
+		s_SceneData.QuadVertexBufferPtr->Scale = tileMultiplier;
+		s_SceneData.QuadVertexBufferPtr++;
+
+		s_SceneData.QuadVertexBufferPtr->Position = { position.x + size.x, position.y, 0.0f };
+		s_SceneData.QuadVertexBufferPtr->Color = color;
+		s_SceneData.QuadVertexBufferPtr->TexCoord = { 1.0f, 0.0f };
+		s_SceneData.QuadVertexBufferPtr->TexIndex = textureIndex;
+		s_SceneData.QuadVertexBufferPtr->Scale = tileMultiplier;
+		s_SceneData.QuadVertexBufferPtr++;
+
+		s_SceneData.QuadVertexBufferPtr->Position = { position.x + size.x, position.y + size.y, 0.0f };
+		s_SceneData.QuadVertexBufferPtr->Color = color;
+		s_SceneData.QuadVertexBufferPtr->TexCoord = { 1.0f, 1.0f };
+		s_SceneData.QuadVertexBufferPtr->TexIndex = textureIndex;
+		s_SceneData.QuadVertexBufferPtr->Scale = tileMultiplier;
+		s_SceneData.QuadVertexBufferPtr++;
+
+		s_SceneData.QuadVertexBufferPtr->Position = { position.x, position.y + size.y, 0.0f };
+		s_SceneData.QuadVertexBufferPtr->Color = color;
+		s_SceneData.QuadVertexBufferPtr->TexCoord = { 0.0f, 1.0f };
+		s_SceneData.QuadVertexBufferPtr->TexIndex = textureIndex;
+		s_SceneData.QuadVertexBufferPtr->Scale = tileMultiplier;
+		s_SceneData.QuadVertexBufferPtr++;
+
+		s_SceneData.quadIndexCount += 6;
+
+		//s_SceneData.TextureShader->SetFloat4("u_Color", color);
+		//s_SceneData.TextureShader->SetFloat("u_TileMultiplier", tileMultiplier);
+		//texture->Bind();
+
+		//glm::mat4 transform = glm::translate(glm::mat4(1.0), position) * // Rotation
+		//	glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+
+		//s_SceneData.TextureShader->SetMat4("u_Transform", transform);
 
 
-		s_SceneData.QuadVertexArray->Bind();
-		RenderCommand::DrawIndexed(s_SceneData.QuadVertexArray);
+		//s_SceneData.QuadVertexArray->Bind();
+		//RenderCommand::DrawIndexed(s_SceneData.QuadVertexArray);
 	}
 
 	void Renderer2D::DrawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float rotation, const glm::vec4& color)
