@@ -137,6 +137,7 @@
     <ClCompile Include="src\GameLayer.cpp" />
     <ClCompile Include="src\Level.cpp" />
     <ClCompile Include="src\ParticleSystem.cpp" />
+    <ClCompile Include="src\ParticleSystemTmp.cpp" />
     <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\Random.cpp" />
     <ClCompile Include="src\Sandbox.cpp" />
@@ -152,6 +153,7 @@
     <ClInclude Include="src\GameLayer.h" />
     <ClInclude Include="src\Level.h" />
     <ClInclude Include="src\ParticleSystem.h" />
+    <ClInclude Include="src\ParticleSystemTmp.h" />
     <ClInclude Include="src\Player.h" />
     <ClInclude Include="src\Random.h" />
     <ClInclude Include="src\Sandbox2D.h" />

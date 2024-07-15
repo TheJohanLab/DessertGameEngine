@@ -56,6 +56,14 @@ void Sandbox2D::OnAttach()
 
 	m_Texture = Dessert::Texture2D::Create("assets/textures/CheckerBoard.png");
 	
+
+	m_Particles.Position = { 0.0f, 0.0f };
+	m_Particles.Velocity = { -2.0f, 0.0f }, m_Particles.VelocityVariation = { 3.0f, 1.0f };
+	m_Particles.SizeBegin = 0.5f, m_Particles.SizeEnd = 0.0f, m_Particles.SizeVariation = 0.3f;
+	m_Particles.ColorBegin = { 254 / 255.0f, 109 / 255.0f, 41 / 255.0f, 1.0f };
+	m_Particles.ColorEnd = { 254 / 255.0f, 212 / 255.0f, 123 / 255.0f , 1.0f };
+	m_Particles.LifeTime = 5.0f;
+
 }
 
 void Sandbox2D::OnDetach()
@@ -67,7 +75,8 @@ void Sandbox2D::OnUpdate(Dessert::Timestep delta)
 {
 	//PROFILE_SCOPE("Sandbox2D::OnUpdate"); Ancienne version
 	DGE_PROFILE_FUNCTION()
-		
+
+	m_LastDeltaTime = delta;
 
 	m_CameraController.OnUpdate(delta);
 	
@@ -80,32 +89,54 @@ void Sandbox2D::OnUpdate(Dessert::Timestep delta)
 	}
 
 	{
-		static float rotation = 0.0f;
-		rotation += delta * 20.0f;
+		//static float rotation = 0.0f;
+		//rotation += delta * 20.0f;
 		DGE_PROFILE_SCOPE("Renderer Draw");
 
 		Dessert::Renderer2D::BeginScene(m_CameraController.GetCamera());
 
-		Dessert::Renderer2D::DrawRotatedQuad({ 1.0f, 0.0f }, { 0.8f, 0.8f }, rotation, { 0.5f, 0.2f, 0.3f, 1.0f });
-		Dessert::Renderer2D::DrawQuad({ -1.0f, 0.0f }, { 0.8f, 0.8f }, { 0.8f, 0.2f, 0.3f, 1.0f });
-		Dessert::Renderer2D::DrawQuad({ 0.5f, -0.5f }, { 0.5f, 0.75f }, { 0.2f, 0.3f, 0.8f, 1.0f });
+		//Dessert::Renderer2D::DrawRotatedQuad({ 1.0f, 0.0f }, { 0.8f, 0.8f }, glm::radians(rotation), { 0.5f, 0.2f, 0.3f, 1.0f });
+		//Dessert::Renderer2D::DrawQuad({ -1.0f, 0.0f }, { 0.8f, 0.8f }, { 0.8f, 0.2f, 0.3f, 1.0f });
+		//Dessert::Renderer2D::DrawQuad({ 0.5f, -0.5f }, { 0.5f, 0.75f }, { 0.2f, 0.3f, 0.8f, 1.0f });
 		Dessert::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 20.0f, 20.0f }, m_Texture, 10.0f);
-		Dessert::Renderer2D::DrawRotatedQuad({ -1.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, rotation, m_Texture, 20.0f);
+		//Dessert::Renderer2D::DrawRotatedQuad({ -1.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, glm::radians(rotation), m_Texture, 20.0f);
 
 
-		for (float y = -5.0f; y < 5.0f; y += 0.5f)
+		//for (float y = -5.0f; y < 5.0f; y += 0.5f)
+		//{
+		//	for (float x = -5.0f; x < 5.0f; x += 0.5f)
+		//	{
+		//		glm::vec4 color = { (x + 5.0f) / 10.0f, 0.4f, (y + 5.0f) / 10.0f, 0.7f };
+		//		Dessert::Renderer2D::DrawQuad({ x, y }, { 0.45f, 0.45f }, color);
+
+		//	}
+
+		//}
+
+		if (Dessert::Input::IsMouseButtonPressed(DGE_MOUSE_BUTTON_LEFT))
 		{
-			for (float x = -5.0f; x < 5.0f; x += 0.5f)
-			{
-				glm::vec4 color = { (x + 5.0f) / 10.0f, 0.4f, (y + 5.0f) / 10.0f, 0.7f };
-				Dessert::Renderer2D::DrawQuad({ x, y }, { 0.45f, 0.45f }, color);
+			auto [x, y] = Dessert::Input::GetMousePosition();
+			auto width = Dessert::Application::Get().GetWindow().GetWidth();
+			auto height = Dessert::Application::Get().GetWindow().GetHeight();
 
-			}
-
+			auto bounds = m_CameraController.GetBounds();
+			auto pos = m_CameraController.GetCamera().getTransformPosition();
+			x = (x / width) * bounds.GetWidth() - bounds.GetWidth() * 0.5f;
+			y = bounds.GetHeight() * 0.5f - (y / height) * bounds.GetHeight();
+			m_Particles.Position = { x + pos.x, y + pos.y };
+			for (int i = 0; i < 50; i++)
+				m_ParticleSystem.Emit(m_Particles);
 		}
+
+		m_ParticleSystem.OnUpdate(delta);
+		m_ParticleSystem.OnRender();
 
 		Dessert::Renderer2D::EndScene();
 	}
+
+
+	
+
 	//TODO Add these functions : Shader::SetMat4, Shader::SetFloat4
 	//std::dynamic_pointer_cast<Dessert::OpenGLShader>(m_Shader)->Bind();
 	//std::dynamic_pointer_cast<Dessert::OpenGLShader>(m_Shader)->setUniformFloat4("u_Color", m_SquareColor);
@@ -125,6 +156,7 @@ void Sandbox2D::OnImGuiRender()
 	ImGui::Text("Quads count : %d", stats.QuadCount);
 	ImGui::Text("Vertices count : %d", stats.GetTotalVertexCount());
 	ImGui::Text("Indices count : %d", stats.GetTotalIndexCount());
+	ImGui::Text("Delta Time : %f ms ( %d FPS)", m_LastDeltaTime, (int)(1.0f / m_LastDeltaTime));
 	/*for (auto& result : m_ProfileResults)
 	{
 		char label[50];

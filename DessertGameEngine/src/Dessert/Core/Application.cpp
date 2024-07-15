@@ -30,8 +30,8 @@ namespace Dessert {
 	{
 		DGE_PROFILE_FUNCTION();
 
-		const double targetFPS = 60.0;
-		const double targetFrameTime = 1.0 / targetFPS;
+		/*const double targetFPS = 60.0;
+		const double targetFrameTime = 1.0 / targetFPS;*/
 
 		while (m_Running) 
 		{
@@ -63,13 +63,13 @@ namespace Dessert {
 
 			m_Window->OnUpdate();
 
-			
+			/*
 			double frameDuration = glfwGetTime() - time;
 			while (frameDuration < targetFrameTime)
 			{
 				frameDuration = glfwGetTime() - time;
 			}
-			
+			*/
 		}
 	}
 

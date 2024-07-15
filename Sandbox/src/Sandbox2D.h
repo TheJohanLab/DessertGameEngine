@@ -2,6 +2,8 @@
 
 #include "Dessert.h"
 
+#include "ParticleSystemTmp.h"
+
 class Sandbox2D: public Dessert::Layer
 {
 
@@ -22,6 +24,10 @@ private:
 		float Time;
 	};
 
+	float m_LastDeltaTime = 0.0f;
+
+	ParticleSystemTmp m_ParticleSystem = (10000);
+	ParticlePropsTmp m_Particles;
 	//std::vector<ProfileResult> m_ProfileResults;
 
 public:
